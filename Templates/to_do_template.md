@@ -1,10 +1,8 @@
 # Weekday, Month Day, Year
 
-
 **Errands**
 
 Which errands do you need to run. Name the place, when you desire to go, and what time they close.
-
 
 **Investigate**
 

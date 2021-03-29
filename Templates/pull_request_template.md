@@ -10,6 +10,5 @@ One sentence descriptionof the PR.
 Fixes #85, Fixes #22, Fixes username/repo#123
 Connects #123
 
-
 **Links:**
 Link to verify work
