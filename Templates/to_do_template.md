@@ -1,15 +1,12 @@
 # Weekday, Month Day, Year
 
-**Errands**
-
+**Errands**  
 Which errands do you need to run. Name the place, when you desire to go, and what time they close.
 
-**Investigate**
-
+**Investigate**  
 Research a topic, technique, technology, company, you name it. State the purpose of the investigation and the desired outcome.
 
-**Productive**
-
+**Productive**  
 List of tasks for the day.
 - *milestone*
   - Effective and efficient task to progress towards your goal.

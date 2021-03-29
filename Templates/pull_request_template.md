@@ -1,14 +1,13 @@
-**Objective:**
-One sentence descriptionof the PR.
+**Objective:**  
+One sentence description of the PR.
 
-**Changes:**
-
+**Changes:**  
 - Describe the big picture of your changes here to communicate to the maintainers why we should accept this pull request.
 - If it fixes a bug or resolves a feature request, be sure to link to that issue.
 
-**Issue:**
+**Issue:**  
 Fixes #85, Fixes #22, Fixes username/repo#123
 Connects #123
 
-**Links:**
+**Links:**  
 Link to verify work
