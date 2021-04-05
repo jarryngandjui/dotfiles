@@ -52,15 +52,17 @@ Competitive Programming at the level at want to perform at requires some time co
 *Key Performance Indicator (KPI)*  
 [Develop Specific Measurable Attainable Relevant and Time-Frame (SMART) indicators.](https://www.klipfolio.com/resources/articles/what-is-a-key-performance-indicator) KPIs that satisfy every letter of the SMART acronym are relevant from the start to the end of the project. KPIs that measure progress are necessary, commonly overlooked are KPIs that measure the assumptions. A change in assumption effects the entire goal, positively or negatively. Introduce KPIs for transient assumptions or evaluate and reevaluate the underlying assumptions as you expect them change.
 
-### **Resource**
-Identify the major resources that are unique to this goal and project. Determine the required resources to complete the goal. Recall that resources are split amongst other ongoing goals. Note the gap between the available and the required resources. ***DO NOT*** proceed with the goal without resolving the resource gap. Note all unresolved gap as risk.
+- problem rating - increase in problem rating indicates progress
+- time - decrease in time solve problems indicates progress
+- commits - an increase in the # commits/week at HubSpot indicates progress
+- user rating - the 
 
-*Learn*  
-Fundamentals Challenges - https://www.hackerearth.com/practice/codemonk/  
+### **Resource** 
 Complete Reference - https://www.hackerearth.com/getstarted-competitive-programming/  
 Curated Resource - https://github.com/lnishan/awesome-competitive-programming  
 
-*Practice*
+*Practice*  
+Fundamentals Challenges - https://www.hackerearth.com/practice/codemonk/ 
 Codeforces Problems - https://codeforces.com/problemset?order=BY_RATING_ASC
 
 *Compete*  
@@ -68,4 +70,5 @@ Coder's Calendar Chrome Extension - https://chrome.google.com/webstore/detail/co
 HackerRank Contest Calendar - https://www.hackerrank.com/calendar
 CodeForces Contest Calendar - https://codeforces.com/calendar
 
-*Questions*
+*Questions*  
+Codeforces Problems - https://codeforces.com/search
