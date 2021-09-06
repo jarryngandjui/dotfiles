@@ -59,4 +59,6 @@ Thus, the probability to find a duplicate within 103 trillion version-4 UUIDs is
 
 [The smallest number of version-4 UUIDs which must be generated for the probability of finding a collision to be p is approximated by the formula](https://en.wikipedia.org/wiki/Universally_unique_identifier#Collisions)
 
+[Are UUIDs really unique?](https://towardsdatascience.com/are-uuids-really-unique-57eb80fc2a870)
+
 
