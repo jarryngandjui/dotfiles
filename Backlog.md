@@ -8,7 +8,9 @@
 **MacOs**
 - Create a macOs util to convert date to echo/unix 
   - Unix to GMT, EST, etc
-  - Copy result
+  - Copy multiple results and store it in the cloud. Uses can toggle between the results and take quick actions.
+    - Older generations of the idea without the cloud functionality
+      - [ClipMenu](http://www.clipmenu.com/versionhistory/)    
   - GMT, EST, etc to UNIX
 
 **Innovative**
