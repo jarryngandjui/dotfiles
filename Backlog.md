@@ -4,6 +4,7 @@
 - Create a util to go from a code to HubSpot app
   - Config in IntelliJ to  hs config
   - Metric in IntelliJ to metric
+  - Add google tab groups to intellij without the split screen. Hold on the files relevant to a feauture open but tucked away.
 
 **MacOs**
 - Create a macOs util to convert date to echo/unix 
