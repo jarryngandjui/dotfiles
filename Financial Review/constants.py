@@ -20,13 +20,15 @@ PAYEE_TRANSLATIONS = [
     Translation("Panda Express", ["PANDA EXPRESS"]),
     Translation("Chipotle", ["CHIPOTLE"]),
     Translation("Harvard Business Review", ["HARVBUSREV"]),
-    Translation("Personal coach", ["PAYPAL *MARIALIZARR", "MARIALIZARR"])
+    Translation("Personal coach", ["PAYPAL *MARIALIZARR", "MARIALIZARR"]),
+    Tanslation("Eastern Market", ["EASTERN MARKET"]),
+    Translation("Dollar Tree", ["DOLLAR TREE"])
 
 ]
 
 RECURRING_TRANSACTIONS = [
     "Harvard Business Review",
     "Personal coach"
-    "Comcast Xfinity",
+    "Comcast",
     "YMCA"
 ]
