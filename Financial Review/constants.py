@@ -21,7 +21,7 @@ PAYEE_TRANSLATIONS = [
     Translation("Chipotle", ["CHIPOTLE"]),
     Translation("Harvard Business Review", ["HARVBUSREV"]),
     Translation("Personal coach", ["PAYPAL *MARIALIZARR", "MARIALIZARR"]),
-    Tanslation("Eastern Market", ["EASTERN MARKET"]),
+    Translation("Eastern Market", ["EASTERN MARKET"]),
     Translation("Dollar Tree", ["DOLLAR TREE"])
 
 ]

@@ -99,7 +99,6 @@ class Transaction_Factory(object):
                 if payee in self.rows[i][self.translate_target_key]:
                     payment_indices.append(i)
 
-        print(payment_indices)
         for i in range(len(payment_indices)):
             self.rows.pop(payment_indices[i] - i)
 
