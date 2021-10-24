@@ -34,7 +34,9 @@ class Transaction_Factory(object):
     def _read_transactions(self, filename):
         with open(filename, 'r') as csvfile:
             reader = csv.DictReader(csvfile)
-            self.rows.append(next(reader))
+
+            for row in reader:
+                self.rows.append(row)
 
     def _write_transactions(self, filename):
         with open(filename, 'w') as csvfile:
