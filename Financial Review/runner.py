@@ -10,12 +10,12 @@ capone = Capital_One_Transaction()
 
 parser = argparse.ArgumentParser(description="Financial runner argument parser")
 parser.add_argument(
-    '-bank', choices=[BOA_PROCESSOR_ARG],help='Transaction processor')
+    '-bank', choices=[BOA_PROCESSOR_ARG, CAPITAL_ONE_PROCESSOR_ARG],help='Transaction processor')
 parser.add_argument(
     '-fp', help='Transaction file path')
 
 args = parser.parse_args()
 if args.bank == BOA_PROCESSOR_ARG:
-    boa.process_transactions(args.ifp)
+    boa.process_transactions(args.fp)
 if args.bank == CAPITAL_ONE_PROCESSOR_ARG:
-    capone.process_transactions(args.ifp)
+    capone.process_transactions(args.fp)
