@@ -4,10 +4,13 @@ Read transactional files in csv format.
 """
 
 import csv
+from constants import PAYEE_TRANSLATIONS, RECURRING_TRANSACTIONS
 
 DOWNLOADS_DIR = "/Users/jarry/Downloads"
 
 class Transaction_Factory(object):
+    translations = PAYEE_TRANSLATIONS
+    recurring_transactions = RECURRING_TRANSACTIONS
     translate_target_key = "payee"
     is_translated_key = "is translated"
     account_key = "account"
@@ -15,16 +18,14 @@ class Transaction_Factory(object):
     output_filename = "~/Downloads/"
     
     account = ""
-    payment_payee = ""
+    payment_payees = []
     rename_columns = dict()
-    translations = []
     rows = []
 
-    def __init__(self, account, payment_payee, rename_columns, translations, output_filename):
+    def __init__(self, account, payment_payees, rename_columns, output_filename):
         self.account = account
-        self.payment_payee = payment_payee
+        self.payment_payee = payment_payees
         self.rename_columns = rename_columns
-        self.translations = translations
         self.output_filename = "{}/{}".format(DOWNLOADS_DIR,
             output_filename)
 
@@ -36,6 +37,7 @@ class Transaction_Factory(object):
         self._read_transactions(filename)
         self._transform_transactions()
         self._apply_translations()
+        self._delete_reccuring_transactions_transform()
         self._write_transactions()
 
     def _read_transactions(self, filename):
@@ -93,10 +95,22 @@ class Transaction_Factory(object):
         payment_indices = []
         
         for i in range(len(self.rows)):
-            if self.payment_payee in self.rows[i][self.translate_target_key]:
-                payment_indices.append(i)
+            for payee in self.payment_payees:
+                if payee in self.rows[i][self.translate_target_key]:
+                    payment_indices.append(i)
+
+        print(payment_indices)
+        for i in range(len(payment_indices)):
+            self.rows.pop(payment_indices[i] - i)
+
+    def _delete_reccuring_transactions_transform(self):
+        recurring_indices = []
+
+        for i in range(len(self.rows)):
+            if self.rows[i][self.translate_target_key] in self.recurring_transactions:
+                recurring_indices.append(i)
         
-        for i in payment_indices:
-            self.rows.pop(i)
+        for i in range(len(recurring_indices)):
+            self.rows.pop(recurring_indices[i] - i)
 
 

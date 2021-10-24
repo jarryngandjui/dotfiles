@@ -4,7 +4,6 @@ Translate the billing/payee to something more friendly and readable.
 
 import constants
 
-
 class Translation:
     column = "payee"
     name = ""
