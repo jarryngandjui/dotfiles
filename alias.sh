@@ -55,4 +55,4 @@ function gbdrl() {
 # Financial Commands
 # -----------------------------
 # python3 /Users/jarry/Git/Notes/Financial\ Review/runner.py
-alias tc="python3 /Users/jarry/Git/Notes/Financial\ Review/runner.py" 
+alias capital="python3 /Users/jarry/Git/Capital/runner.py" 
