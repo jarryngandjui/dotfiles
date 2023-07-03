@@ -34,3 +34,10 @@ else
   echo "Notion has been installed successfully."
 fi
 
+echo "Installing Postman..."
+if [ -x "$(command -v postman)" ]; then
+  echo "Postman is already installed."
+else
+  brew install --cask postman
+  echo "Postman has been installed successfully."
+fi

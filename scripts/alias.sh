@@ -6,14 +6,7 @@ alias aws-credentials='vi ~/.aws/credentials'
 
 # Application
 # todo.txt-cli (https://github.com/todotxt/todo.txt-cli)
-alias t=todo.sh
-
-# Servers
-# BeanTown Café
-alias jarry@btc_react='ssh -i ~/Moi/Git/.pem/caffe-library.pem jarry@100.25.117.241'
-alias jarry@btc_node='ssh -i ~/Moi/Git/.pem/caffe-library.pem jarry@54.90.37.246'
-alias ubuntu@btc_react='ssh -i ~/Moi/Git/.pem/caffe-library.pem ubuntu@100.25.117.241'
-alias ubuntu@btc_node='ssh -i ~/Moi/Git/.pem/caffe-library.pem ubuntu@54.90.37.246'
+#alias t=todo.sh
 
 # Git Commands
 # -----------------------------
@@ -50,9 +43,3 @@ function gbdrl() {
   gp origin --delete "${branch_name}"
   gb -D "${branch_name}"
 }
-
-
-# Financial Commands
-# -----------------------------
-# python3 /Users/jarry/Git/Notes/Financial\ Review/runner.py
-alias capital="python3 /Users/jarry/Git/Capital/runner.py" 
