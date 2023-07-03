@@ -15,6 +15,7 @@ else
   brew install docker
   echo "Docker has been installed successfully."
 fi
+docker login
 
 
 echo "Installing VSCode..."
