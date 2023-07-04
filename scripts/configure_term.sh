@@ -34,6 +34,26 @@ else
     echo "Oh My Zsh installed successfully."
 fi
 
+# Install homebrew
+if ! command -v brew &> /dev/null; then
+    echo "Homebrew is not installed. Installing now..."
+    
+    # Install Homebrew
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/maestro/.zprofile
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    
+    # Check if the installation was successful
+    if [ $? -eq 0 ]; then
+        echo "Homebrew installed successfully!"
+    else
+        echo "Failed to install Homebrew."
+        exit 1
+    fi
+else
+    echo "Homebrew is already installed."
+fi
+
 
 # Install OH-MY-ZSH dracula theme
 cd $HOME
@@ -69,5 +89,3 @@ echo "Node.js version:"
 node --version
 echo "npm version:"
 npm --version
-
-
