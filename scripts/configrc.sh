@@ -10,4 +10,4 @@ chmod +x $SECRETS
 
 source "$ALIAS"
 source "$VARS"
-chmod +x $SECRETS
+source "$SECRETS"
