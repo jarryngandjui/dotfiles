@@ -56,4 +56,17 @@ else
     echo "The Dracula theme has been installed successfully. Please restart your terminal."
 fi
 
+# Install Node.js and npm using Homebrew
+if ! command -v node &> /dev/null; then
+    echo "Node.js is not installed. Installing Node.js..."
+    brew install node
+else
+    echo "Node.js is already installed."
+fi
+
+echo "Node.js version:"
+node --version
+echo "npm version:"
+npm --version
+
 
