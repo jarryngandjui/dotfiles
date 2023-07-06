@@ -1,3 +1,8 @@
+
+# Python alias
+alias python=python3
+alias pip=pip3
+
 # Alias edit
 alias alias-edit='vi ~/.aliases'
 
