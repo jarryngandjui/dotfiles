@@ -14,7 +14,7 @@ ssh-add ---apple-use-keychain ~/.ssh/id_github
 
 # Copy SSH key to clipboard
 echo "Copying SSH key to clipboard..."
-pbcopy < ~/.ssh/id_ed25519.pub
+pbcopy < ~/.ssh/id_github.pub
 echo "SSH key has been copied to the clipboard."
 
 # Prompt user to add SSH key to GitHub account
