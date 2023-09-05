@@ -1,10 +1,22 @@
 #!/bin/bash
 
+echo "Installing Python..."
+if brew list python3 &>/dev/null; then
+    echo "Python 3 is already installed."
+else
+  brew install python3
+  if [ $? -eq 0 ]; then
+        echo "Python 3 installed successfully."
+  else
+      echo "Error: Python 3 installation failed."
+  fi
+fi
+
 echo "Installing Chrome..."
 if [ -x "$(command -v google-chrome-stable)" ]; then
   echo "Chrome is already installed."
 else
-  brew cask install google-chrome
+  brew install --cask google-chrome
   echo "Chrome has been installed successfully."
 fi
 
@@ -22,7 +34,7 @@ echo "Installing VSCode..."
 if [ -x "$(command -v code)" ]; then
   echo "VSCode is already installed."
 else
-  brew cask install visual-studio-code
+  brew install --cask visual-studio-code
   echo "VSCode has been installed successfully."
 fi
 
@@ -31,7 +43,7 @@ echo "Installing Notion..."
 if [ -x "$(command -v notion)" ]; then
   echo "Notion is already installed."
 else
-  brew cask install notion
+  brew install --cask notion
   echo "Notion has been installed successfully."
 fi
 
