@@ -1,7 +1,8 @@
 
 # Python alias
-alias python=python3
-alias pip=pip3
+alias python=/opt/homebrew/bin/python3
+alias pip=/opt/homebrew/bin/pip3
+alias activate='source ./venv/bin/activate'
 
 # Alias edit
 alias alias-edit='vi ~/.aliases'
