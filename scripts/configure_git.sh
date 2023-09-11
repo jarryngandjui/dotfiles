@@ -10,7 +10,7 @@ eval "$(ssh-agent -s)"
 
 # Add SSH key to SSH agent
 echo "Adding SSH key to SSH agent..."
-ssh-add ---apple-use-keychain ~/.ssh/id_github
+ssh-add --apple-use-keychain ~/.ssh/id_github
 
 # Copy SSH key to clipboard
 echo "Copying SSH key to clipboard..."
