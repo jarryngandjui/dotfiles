@@ -1,7 +1,8 @@
 
 # Python alias
-alias python=/opt/homebrew/bin/python3
-alias pip=/opt/homebrew/bin/pip3
+# Updates the python and pip aliases when using virtualenv 
+alias python='eval $(which python3)'
+alias pip='eval $(which pip3)'
 alias activate='source ./venv/bin/activate'
 
 # Alias edit
