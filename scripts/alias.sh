@@ -1,4 +1,7 @@
 
+# Postgres
+alias postgres='brew services start postgresql@15'
+
 # Python alias
 # Updates the python and pip aliases when using virtualenv 
 alias python='eval $(which python3)'
