@@ -1,6 +1,8 @@
 
 # Postgres
 alias postgres='brew services start postgresql@15'
+alias postgres-restart='brew services restart postgresql@15'
+alias postgres-stop='brew services stop postgresql@15'
 
 # Python alias
 # Updates the python and pip aliases when using virtualenv 
