@@ -1,6 +1,6 @@
 
 # Postgres
-alias postgres='brew services start postgresql@15'
+alias postgres-start='brew services start postgresql@15'
 alias postgres-restart='brew services restart postgresql@15'
 alias postgres-stop='brew services stop postgresql@15'
 
