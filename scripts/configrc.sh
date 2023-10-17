@@ -11,3 +11,5 @@ chmod +x $SECRETS
 source "$ALIAS"
 source "$VARS"
 source "$SECRETS"
+
+ssh-add --apple-use-keychain 
