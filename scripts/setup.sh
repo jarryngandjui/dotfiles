@@ -1,4 +1,6 @@
 #!/bin/bash
+
+#!/bin/bash
 create_folder_if_not_exist() {
   local folder_path="$1"
 
@@ -89,3 +91,76 @@ echo "Node.js version:"
 node --version
 echo "npm version:"
 npm --version
+
+
+echo "Installing Python..."
+if brew list python3 &>/dev/null; then
+    echo "Python 3 is already installed."
+else
+  brew install python3
+  if [ $? -eq 0 ]; then
+        echo "Python 3 installed successfully."
+  else
+      echo "Error: Python 3 installation failed."
+  fi
+fi
+
+echo "Installing Chrome..."
+if [ -x "$(command -v google-chrome-stable)" ]; then
+  echo "Chrome is already installed."
+else
+  brew install --cask google-chrome
+  echo "Chrome has been installed successfully."
+fi
+
+echo "Installing Docker..."
+if [ -x "$(command -v docker)" ]; then
+  echo "Docker is already installed."
+else
+  brew install docker
+  echo "Docker has been installed successfully."
+fi
+docker login
+
+echo "Installing Postman..."
+if [ -x "$(command -v postman)" ]; then
+  echo "Postman is already installed."
+else
+  brew install --cask postman
+  echo "Postman has been installed successfully."
+fi
+
+
+# Generate SSH key
+echo "Generating SSH key..."
+ssh-keygen -t rsa -C "jarryngandjui@gmail.com" -f ~/.ssh/id_github
+
+# Start SSH agent
+echo "Starting SSH agent..."
+eval "$(ssh-agent -s)"
+
+# Add SSH key to SSH agent
+echo "Adding SSH key to SSH agent..."
+ssh-add --apple-use-keychain ~/.ssh/id_github
+
+# Copy SSH key to clipboard
+echo "Copying SSH key to clipboard..."
+pbcopy < ~/.ssh/id_github.pub
+echo "SSH key has been copied to the clipboard."
+
+# Prompt user to add SSH key to GitHub account
+echo "Please open your GitHub account settings, navigate to SSH and GPG keys, and add the copied SSH key."
+echo "Press Enter when you have added the SSH key to your GitHub account."
+read
+
+# Configure local Git user name and email
+echo "Configuring local Git user name and email..."
+echo "Enter your Git user name:"
+read git_username
+echo "Enter your Git email:"
+read git_email
+
+git config --global user.name "$git_username"
+git config --global user.email "$git_email"
+
+echo "GitHub SSH key setup and Git configuration completed successfully."

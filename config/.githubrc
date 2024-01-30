@@ -1,12 +1,5 @@
 
-# Python alias
-# Updates the python and pip aliases when using virtualenv 
-alias python='eval $(which python3)'
-alias pip='eval $(which pip3)'
-alias activate='source ./venv/bin/activate'
-
-# Alias edit
-alias alias-edit='vim ~/.aliases'
+#!/bin/bash
 
 # Git Commands
 # -----------------------------
@@ -43,3 +36,4 @@ function gbdrl() {
   gp origin --delete "${branch_name}"
   gb -D "${branch_name}"
 }
+

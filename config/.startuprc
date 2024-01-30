@@ -1,0 +1,24 @@
+#!/bin/bash
+# Define variables
+PROJECTS=~/Projects
+NOTES=$PROJECTS/Notes
+CONFIG=$NOTES/config
+SCRIPTS=$NOTES/scripts
+STARTUPRC=$CONFIG/.startuprc
+GITHUBRC=$CONFIG/.githubrc
+
+
+# Main direcotries 
+alias projects="cd $PROJECTS"
+alias notes="cd $NOTES"
+alias startuprc="vim $STARTUPRC"
+alias githubrc="vim $GITHUBRC"
+
+
+# Python
+# Updates the python and pip aliases when using virtualenv 
+alias python='eval $(which python3)'
+alias pip='eval $(which pip3)'
+alias activate='source ./venv/bin/activate'
+
+
