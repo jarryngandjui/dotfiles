@@ -2,12 +2,12 @@
 
 # Main direcotries 
 PROJECTS=~/Projects
-NOTES=$PROJECTS/Notes
-CONFIG=$NOTES/config
+DOTFILES=$HOME/dotfiles
+CONFIG=$DOTFILES/config
 SCRIPTS=$NOTES/scripts
 
 alias projects="cd $PROJECTS"
-alias notes="cd $NOTES"
+alias dotfiles="cd $DOTFILES"
 
 
 # Config files
