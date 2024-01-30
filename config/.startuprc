@@ -6,6 +6,7 @@ CONFIG=$NOTES/config
 SCRIPTS=$NOTES/scripts
 STARTUPRC=$CONFIG/.startuprc
 GITHUBRC=$CONFIG/.githubrc
+ALACRITTYRC=$CONFIG/.alacritty.yml
 
 
 # Main direcotries 
@@ -13,7 +14,11 @@ alias projects="cd $PROJECTS"
 alias notes="cd $NOTES"
 alias startuprc="vim $STARTUPRC"
 alias githubrc="vim $GITHUBRC"
+alias alacrittyrc="vim $ALACRITTYRC"
 
+# Alacritty doesn't create the config file for you, 
+# but it looks for one in the following location
+# ln -s $ALACRITTYRC $HOME/.config/alacritty/alacritty.yml
 
 # Python
 # Updates the python and pip aliases when using virtualenv 
