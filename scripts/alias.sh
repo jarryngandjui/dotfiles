@@ -1,9 +1,4 @@
 
-# Postgres
-alias postgres-start='brew services start postgresql@15'
-alias postgres-restart='brew services restart postgresql@15'
-alias postgres-stop='brew services stop postgresql@15'
-
 # Python alias
 # Updates the python and pip aliases when using virtualenv 
 alias python='eval $(which python3)'
@@ -11,14 +6,7 @@ alias pip='eval $(which pip3)'
 alias activate='source ./venv/bin/activate'
 
 # Alias edit
-alias alias-edit='vi ~/.aliases'
-
-# Aws Credentials
-alias aws-credentials='vi ~/.aws/credentials'
-
-# Application
-# todo.txt-cli (https://github.com/todotxt/todo.txt-cli)
-#alias t=todo.sh
+alias alias-edit='vim ~/.aliases'
 
 # Git Commands
 # -----------------------------

@@ -29,24 +29,6 @@ else
 fi
 docker login
 
-
-echo "Installing VSCode..."
-if [ -x "$(command -v code)" ]; then
-  echo "VSCode is already installed."
-else
-  brew install --cask visual-studio-code
-  echo "VSCode has been installed successfully."
-fi
-
-
-echo "Installing Notion..."
-if [ -x "$(command -v notion)" ]; then
-  echo "Notion is already installed."
-else
-  brew install --cask notion
-  echo "Notion has been installed successfully."
-fi
-
 echo "Installing Postman..."
 if [ -x "$(command -v postman)" ]; then
   echo "Postman is already installed."
