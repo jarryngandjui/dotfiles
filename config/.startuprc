@@ -1,29 +1,33 @@
 #!/bin/bash
-# Define variables
+
+# Main direcotries 
 PROJECTS=~/Projects
 NOTES=$PROJECTS/Notes
 CONFIG=$NOTES/config
 SCRIPTS=$NOTES/scripts
+
+alias projects="cd $PROJECTS"
+alias notes="cd $NOTES"
+
+
+# Config files
+ZSHRC=$CONFIG/.zshrc
 STARTUPRC=$CONFIG/.startuprc
 GITHUBRC=$CONFIG/.githubrc
 ALACRITTYRC=$CONFIG/.alacritty.yml
 NVIMRC=$CONFIG/.nvimrc.lua
 
-
-# Main direcotries 
-alias projects="cd $PROJECTS"
-alias notes="cd $NOTES"
+alias zshrc="nvim $ZSHRC"
 alias startuprc="nvim $STARTUPRC"
 alias githubrc="nvim $GITHUBRC"
 alias alacrittyrc="nvim $ALACRITTYRC"
 alias nvimrc="nvim $NVIMRC"
 
-# Alacritty doesn't create the config file for you, 
-# but it looks for one in the following location
+# Symbolic links
+# ln -s $HOME/.zshrc $ZSHRC
 # ln -s $ALACRITTYRC $HOME/.config/alacritty/alacritty.yml
-
-# Symlink the config file for neovim
 # ln -s $NVIMRC $HOME/.config/nvim/init.lua
+
 
 # Python
 # Updates the python and pip aliases when using virtualenv 
