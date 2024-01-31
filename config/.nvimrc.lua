@@ -37,9 +37,6 @@ I hope you enjoy your Neovim journey,
 P.S. You can delete this when you're done too. It's your config now :)
 --]]
 
--- Enable relative line numbers
-vim.wo.relativenumber = true
-
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -279,6 +276,9 @@ require('lazy').setup({
 -- [[ Setting options ]]
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
+
+-- Enable relative line numbers
+vim.wo.relativenumber = true
 
 -- Set highlight on search
 vim.o.hlsearch = false
