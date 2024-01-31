@@ -26,6 +26,7 @@ alias nvimrc="nvim $NVIMRC"
 # Symbolic links
 # ln -s $HOME/.zshrc $ZSHRC
 # ln -s $ALACRITTYRC $HOME/.config/alacritty/alacritty.yml
+# ln -s $ALACRITTYRC $HOME/.config/alacritty/lazy-lock.json
 # ln -s $NVIMRC $HOME/.config/nvim/init.lua
 
 
