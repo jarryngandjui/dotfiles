@@ -14,7 +14,7 @@ alias dotfiles="cd $DOTFILES"
 ZSHRC=$CONFIG/.zshrc
 STARTUPRC=$CONFIG/.startuprc
 GITHUBRC=$CONFIG/.githubrc
-ALACRITTYRC=$CONFIG/.alacritty.yml
+ALACRITTYRC=$CONFIG/alacritty.yml
 NVIMRC=$CONFIG/.nvimrc.lua
 
 alias zshrc="nvim $ZSHRC"
@@ -26,7 +26,7 @@ alias nvimrc="nvim $NVIMRC"
 # Symbolic links
 # ln -s $HOME/.zshrc $ZSHRC
 # ln -s $ALACRITTYRC $HOME/.config/alacritty/alacritty.yml
-# ln -s $ALACRITTYRC $HOME/.config/alacritty/lazy-lock.json
+# ln -s $NVIMRC $HOME/.config/nvim/lazy-lock.json
 # ln -s $NVIMRC $HOME/.config/nvim/init.lua
 
 
