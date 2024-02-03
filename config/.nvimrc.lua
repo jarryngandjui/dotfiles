@@ -72,6 +72,9 @@ require('lazy').setup({
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
 
+  -- Vim be good at editing files
+  'ThePrimeagen/vim-be-good',
+
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 

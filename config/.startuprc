@@ -16,6 +16,7 @@ STARTUPRC=$CONFIG/.startuprc
 GITHUBRC=$CONFIG/.githubrc
 ALACRITTYRC=$CONFIG/alacritty.yml
 NVIMRC=$CONFIG/.nvimrc.lua
+NVIMLOCK=$CONFIG/lazy-lock.json
 
 alias zshrc="nvim $ZSHRC"
 alias startuprc="nvim $STARTUPRC"
@@ -26,7 +27,7 @@ alias nvimrc="nvim $NVIMRC"
 # Symbolic links
 # ln -s $HOME/.zshrc $ZSHRC
 # ln -s $ALACRITTYRC $HOME/.config/alacritty/alacritty.yml
-# ln -s $NVIMRC $HOME/.config/nvim/lazy-lock.json
+# ln -s $NVIMLOCK $HOME/.config/nvim/lazy-lock.json
 # ln -s $NVIMRC $HOME/.config/nvim/init.lua
 
 
