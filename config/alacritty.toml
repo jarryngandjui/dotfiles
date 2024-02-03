@@ -1,0 +1,52 @@
+live_config_reload = true
+shell = "/bin/zsh"
+
+[colors]
+draw_bold_text_with_bright_colors = true
+
+[colors.normal]
+black = "0x1E1E1E"
+blue = "0x569CD6"
+cyan = "0x9CDCFE"
+green = "0x608B4E"
+magenta = "0xC586C0"
+red = "0xF44747"
+white = "0xD4D4D4"
+yellow = "0xD7BA7D"
+
+[colors.primary]
+background = "0x1E1E1E"
+foreground = "0xD4D4D4"
+
+[font]
+size = 15
+
+[font.bold]
+family = "JetBrainsMono Nerd Font"
+style = "Bold"
+
+[font.bold_italic]
+family = "JetBrainsMono Nerd Font"
+style = "BoldItalic"
+
+[font.italic]
+family = "JetBrainsMono Nerd Font"
+style = "MediumItalic"
+
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+style = "Medium"
+
+[scrolling]
+history = 10000
+multiplier = 3
+
+[selection]
+save_to_clipboard = false
+
+[window]
+opacity = 0.8
+
+[window.padding]
+x = 10
+y = 10
