@@ -1,5 +1,12 @@
-
 #!/bin/bash
+alias vim="nvim"
+
+# Python
+# -----------------------------
+# Updates the python and pip aliases when using virtualenv 
+alias python='eval $(which python3)'
+alias pip='eval $(which pip3)'
+alias activate='source ./venv/bin/activate'
 
 # Git Commands
 # -----------------------------
