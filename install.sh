@@ -55,18 +55,15 @@ ln -sf ~/dotfiles/files/alacritty/alacritty.toml ~/.config/alacritty/alacritty.t
 
 
 echo "Installing NeoVim…"
-dependency neovim
+dependency neovim f
 mkdir -p ~/.config/nvim/.backup
 ln -sf ~/dotfiles/files/nvim/init.lua ~/.config/nvim/init.lua
 ln -sf ~/dotfiles/files/nvim/lazy-lock.json ~/.config/nvim/lazy-lock.json
 
 echo "Installing Zsh…"
-dependency zsh
-depencency zsh-autosuggestions
+dependency zsh f
+dependency zsh-autosuggestions f
 mkdir -p ~/.config/zsh
-ln -sf ~/dotfiles/files/zsh/* ~/.config/zsh
-ln -sf ~/dotfiles/files/zshrc ~/.zshrc
-ln -sf ~/dotfiles/files/zprofile ~/.zprofile
 OH_MY_ZSH=$HOME/.oh-my-zsh
 if [ -d $OH_MY_ZSH ]; then
   echo "Oh My Zsh is already installed."
@@ -80,3 +77,6 @@ else
 
     echo "Oh My Zsh installed successfully."
 fi
+ln -sf ~/dotfiles/files/zsh/* ~/.config/zsh
+ln -sf ~/dotfiles/files/zshrc ~/.zshrc
+ln -sf ~/dotfiles/files/zprofile ~/.zprofile
