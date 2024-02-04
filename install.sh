@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Just making sure
-mkdir -p ~/.config
-
 function dependency {
     local package=$1
     local install_type=${2:-} # Default to empty if not provided
@@ -62,9 +59,8 @@ ln -sf ~/dotfiles/files/nvim/lazy-lock.json ~/.config/nvim/lazy-lock.json
 
 echo "Installing Zsh…"
 dependency zsh f
-dependency zsh-autosuggestions f
-mkdir -p ~/.config/zsh
 OH_MY_ZSH=$HOME/.oh-my-zsh
+OH_MY_ZSH_CUSTOM=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}
 if [ -d $OH_MY_ZSH ]; then
   echo "Oh My Zsh is already installed."
 else
@@ -77,6 +73,14 @@ else
 
     echo "Oh My Zsh installed successfully."
 fi
+ZSH_AUTOSUGGESTIONS_DIR="$OH_MY_ZSH_CUSTOM/plugins/zsh-autosuggestions"
+if [ ! -d "$OH_MY_ZSH_CUSTOM/plugins/zsh-autosuggestions" ]; then
+    echo "Installing zsh-autosuggestions..."
+    git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_AUTOSUGGESTIONS_DIR"
+else
+    echo "zsh-autosuggestions is already installed."
+fi
+mkdir -p ~/.config/zsh
 ln -sf ~/dotfiles/files/zsh/* ~/.config/zsh
 ln -sf ~/dotfiles/files/zshrc ~/.zshrc
 ln -sf ~/dotfiles/files/zprofile ~/.zprofile
