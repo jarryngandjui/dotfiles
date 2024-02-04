@@ -64,14 +64,22 @@ OH_MY_ZSH_CUSTOM=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}
 if [ -d $OH_MY_ZSH ]; then
   echo "Oh My Zsh is already installed."
 else
-    # Install Oh My Zsh
     echo "Installing Oh My Zsh..."
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
     # Change default shell to Zsh
     chsh -s $(which zsh)
-
     echo "Oh My Zsh installed successfully."
+fi
+DRACULA_THEME_DIR="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/dracula"
+if [ ! -d "$DRACULA_THEME_DIR" ]; then
+    echo "Dracula theme not found. Installing..."
+    git clone https://github.com/dracula/zsh.git "$DRACULA_THEME_DIR"
+    # Create a symlink for the theme to be recognized by Oh My Zsh
+    ln -s "${DRACULA_THEME_DIR}/dracula.zsh-theme" "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/dracula.zsh-theme"
+    echo "Dracula theme installed and set successfully."
+else
+    echo "Dracula theme is already installed."
 fi
 ZSH_AUTOSUGGESTIONS_DIR="$OH_MY_ZSH_CUSTOM/plugins/zsh-autosuggestions"
 if [ ! -d "$OH_MY_ZSH_CUSTOM/plugins/zsh-autosuggestions" ]; then
