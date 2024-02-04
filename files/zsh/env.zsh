@@ -8,7 +8,7 @@ export ZSHRC=$CONFIG/zshrc
 export ZSHPROFILE=$CONFIG/zprofile
 export ZSHALIAS=$CONFIG/zsh/alias.sh
 export ZSHENV=$CONFIG/zsh/env.sh
-export ALACRITTYCONFIG=$CONFIG/alacritty/alacritty.oml
+export ALACRITTYCONFIG=$CONFIG/alacritty/alacritty.toml
 export NVIMINIT=$CONFIG/nvim/init.lua
 export NVIMLOCK=$CONFIG/nvim/lazy-lock.json
 
