@@ -4,35 +4,54 @@
 mkdir -p ~/.config
 
 function dependency {
-    if brew list --formula $1 &> /dev/null; then
-        echo "'$1' formula is already installed."
-    elif brew list --cask $1 &> /dev/null; then
-        echo "'$1' cask is already installed."
+    local package=$1
+    local install_type=${2:-} # Default to empty if not provided
+
+    # Lowercase conversion for cross-shell compatibility
+    install_type=$(echo "$install_type" | awk '{print tolower($0)}')
+
+    if brew list --formula "$package" &> /dev/null; then
+        echo "'$package' formula is already installed."
+    elif brew list --cask "$package" &> /dev/null; then
+        echo "'$package' cask is already installed."
     else
-        echo "Package '$1' is not installed. Install as a formula (F) or as a cask (C)? [F/C/n] "
-        read choice
-        case "${choice:l}" in  # Lowercase conversion for zsh
-            f)
-                brew install $1
-                ;;
-            c)
-                brew install --cask $1
-                ;;
-            n)
-                echo "Installation canceled."
-                ;;
-            *)
-                echo "Invalid option. Installation canceled."
-                ;;
-        esac
+        if [ "$install_type" = "f" ]; then
+            echo "Installing '$package' as a formula."
+            brew install "$package"
+        elif [ "$install_type" = "c" ]; then
+            echo "Installing '$package' as a cask."
+            brew install --cask "$package"
+        else
+            echo "Package '$package' is not installed. Install as a formula (F) or as a cask (C)? [F/C/n] "
+            read -r choice
+            # Lowercase conversion for cross-shell compatibility
+            choice=$(echo "$choice" | awk '{print tolower($0)}')
+            
+            case "$choice" in
+                f)
+                    brew install "$package"
+                    ;;
+                c)
+                    brew install --cask "$package"
+                    ;;
+                n)
+                    echo "Installation canceled."
+                    ;;
+                *)
+                    echo "Invalid option. Installation canceled."
+                    ;;
+            esac
+        fi
     fi
 }
 
 
 echo "Setting up Alacritty…"
-dependency alacritty
+dependency alacritty c
+brew tap homebrew/cask-fonts
+dependency font-jetbrains-mono-nerd-font c
 mkdir -p ~/.config/alacritty
-ln -sf ~/dotfiles/files/alacritty.toml ~/.config/alacritty/alacritty.toml
+ln -sf ~/dotfiles/files/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
 
 
 echo "Installing NeoVim…"
