@@ -92,3 +92,7 @@ mkdir -p ~/.config/zsh
 ln -sf ~/dotfiles/files/zsh/* ~/.config/zsh
 ln -sf ~/dotfiles/files/zshrc ~/.zshrc
 ln -sf ~/dotfiles/files/zprofile ~/.zprofile
+
+echo "Setting up RipGrep…"
+dependency ripgrep f
+
