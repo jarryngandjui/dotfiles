@@ -94,5 +94,6 @@ ln -sf ~/dotfiles/files/zshrc ~/.zshrc
 ln -sf ~/dotfiles/files/zprofile ~/.zprofile
 
 echo "Setting up RipGrep…"
+# Handle skipping .gitignore files on search
 dependency ripgrep f
 
