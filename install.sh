@@ -92,3 +92,8 @@ mkdir -p ~/.config/zsh
 ln -sf ~/dotfiles/files/zsh/* ~/.config/zsh
 ln -sf ~/dotfiles/files/zshrc ~/.zshrc
 ln -sf ~/dotfiles/files/zprofile ~/.zprofile
+
+echo "Setting up RipGrep…"
+# Handle skipping .gitignore files on search
+dependency ripgrep f
+
