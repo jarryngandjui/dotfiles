@@ -57,6 +57,14 @@ mkdir -p ~/.config/nvim/.backup
 ln -sf ~/dotfiles/files/nvim/init.lua ~/.config/nvim/init.lua
 ln -sf ~/dotfiles/files/nvim/lazy-lock.json ~/.config/nvim/lazy-lock.json
 
+echo "Installing up RipGrep…"
+# Handle skipping .gitignore files on search
+dependency ripgrep f
+
+echo "Installing up n…"
+# Node version manager .nvmrc files
+dependency n f
+
 echo "Installing Zsh…"
 dependency zsh f
 OH_MY_ZSH=$HOME/.oh-my-zsh
@@ -88,12 +96,12 @@ if [ ! -d "$OH_MY_ZSH_CUSTOM/plugins/zsh-autosuggestions" ]; then
 else
     echo "zsh-autosuggestions is already installed."
 fi
+
+echo "Loading zsh profile and scripts..."
 mkdir -p ~/.config/zsh
 ln -sf ~/dotfiles/files/zsh/* ~/.config/zsh
 ln -sf ~/dotfiles/files/zshrc ~/.zshrc
 ln -sf ~/dotfiles/files/zprofile ~/.zprofile
+echo "Loaded zsh profile and scripts."
 
-echo "Setting up RipGrep…"
-# Handle skipping .gitignore files on search
-dependency ripgrep f
 
