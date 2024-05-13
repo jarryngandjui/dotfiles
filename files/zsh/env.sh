@@ -26,6 +26,9 @@ export ALACRITTYCONFIG=$CONFIG/alacritty/alacritty.toml
 export NVIMINIT=$CONFIG/nvim/init.lua
 export NVIMLOCK=$CONFIG/nvim/lazy-lock.json
 
+# Node version manager directory
+export N_PREFIX=$HOME/n
+
 alias projects="cd $PROJECTS"
 alias sessions="cd $SESSIONS"
 alias dotfiles="cd $DOTFILES"
