@@ -39,11 +39,13 @@ return {
         { "<leader>hD", function() require('gitsigns').diffthis('~') end, desc = "Git diff against last commit" },
         { "<leader>tb", "<cmd>lua require('gitsigns').toggle_current_line_blame()<cr>", desc = "Toggle git blame line" },
         { "<leader>td", "<cmd>lua require('gitsigns').toggle_deleted()<cr>", desc = "Toggle git show deleted" },
-        { { 'o', 'x' }, "ih", ":<C-U>Gitsigns select_hunk<CR>", desc = "Select git hunk" },
+        { "o", "ih", ":<C-U>Gitsigns select_hunk<CR>", desc = "Select git hunk" },
+        { "x", "ih", ":<C-U>Gitsigns select_hunk<CR>", desc = "Select git hunk" },
       }
       return keys
     end,
   },
+
   {
     -- highly customizable bottom statusline 
     'nvim-lualine/lualine.nvim',

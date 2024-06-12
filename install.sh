@@ -66,11 +66,12 @@ ln -sf $dotfiles_dir/files/alacritty/alacritty.toml ~/.config/alacritty/alacritt
 
 echo "Installing NeoVim…"
 dependency neovim f
-mkdir -p ~/.config/nvim/.backup
-mkdir -p ~/.config/nvim/config
-mkdir -p ~/.config/nvim/plugins
 source_nvim_dir=$dotfiles_dir/files/nvim
 target_nvim_dir=~/.config/nvim
+rm -rf $target_nvim_dir
+mkdir -p ~/.config/nvim/.backup
+mkdir -p ~/.config/nvim/lua/config
+mkdir -p ~/.config/nvim/lua/plugins
 ln -sf ~/dotfiles/files/nvim/init.lua ~/.config/nvim/init.lua
 ln -sf ~/dotfiles/files/nvim/lazy-lock.json ~/.config/nvim/lazy-lock.json
 cd $source_nvim_dir
