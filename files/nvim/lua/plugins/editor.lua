@@ -1,4 +1,6 @@
 -- Editor config such as tabs, autocomplete, git info
+local utils = require("utils")
+
 return {
   -- Automatically detect tabstop and shiftwidth
   'tpope/vim-sleuth',

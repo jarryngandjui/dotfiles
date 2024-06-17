@@ -38,7 +38,8 @@ local function load_paths()
     utils.add_path(path)
   end
   
-  is_path_loaded = true
+  is_path_loaded = tru
+
 end
 
 local function load_lazy()
