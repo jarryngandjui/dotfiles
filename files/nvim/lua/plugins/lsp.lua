@@ -1,18 +1,5 @@
 -- LSP configurations
 local utils = require("utils")
-local mason = require("mason")
-local lspconfig = require("lspconfig")
-local mason_lspconfig = require("mason-lspconfig")
-local border = {
-  { "🭽", "FloatBorder" },
-  { "▔", "FloatBorder" },
-  { "🭾", "FloatBorder" },
-  { "▕", "FloatBorder" },
-  { "🭿", "FloatBorder" },
-  { "▁", "FloatBorder" },
-  { "🭼", "FloatBorder" },
-  { "▏", "FloatBorder" },
-}
 local formatters = {
   javascript = { "prettier" },
   javascriptreact = { "prettier" },
@@ -31,67 +18,41 @@ local servers = {
   "eslint",
   "tsserver",
   "lua_ls",
-  "denols",  
+  "denols",
   "astro",
   "tailwindcss",
   "jsonls",
   "vimls",
-  pylsp = {
-    settings = {
-      pylsp = {
-        plugins = {
-          pycodestyle = {
-            ignore = { "E501" },
-          },
-        },
-      },
-    },
-},
-  lua_ls = {
-    settings = {
-      Lua = {
-        completion = {
-            callSnippet = "Replace",
-        },
-        diagnostics = {
-            globals = { "vim" },
-        },
-      },
-    },
-  },
 }
 
 -- _G makes this function available to vimscript lua calls
 _G.lsp_organize_imports = utils.lsp_organize_imports
 
-local lsp_on_attach = function()
+local lsp_on_attach = function(_, bufnr)
   vim.api.nvim_create_autocmd("LspAttach", {
-    group = vim.api.nvim_create_augroup("UserLspConfig", {}),
-    callback = function(ev)
-      print("LSP callback")
-      -- TODO: move this to typescript
+    callback = function(_)
       vim.cmd([[command! OR lua lsp_organize_imports()]])
 
-      utils.nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-      utils.nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+      utils.nmap(bufnr, '<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+      utils.nmap(bufnr, '<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
 
-      utils.nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-      utils.nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-      utils.nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-      utils.nmap('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
-      utils.nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-      utils.nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
-      utils.nmap('n', 'gO', lsp_utils.lsp_organize_imports, bufopts)
+      utils.nmap(bufnr, 'gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
+      utils.nmap(bufnr, 'gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
+      utils.nmap(bufnr, 'gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
+      utils.nmap(bufnr, '<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+      utils.nmap(bufnr, '<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
+      utils.nmap(bufnr, '<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+      utils.nmap(bufnr, 'gO', utils.lsp_organize_imports, 'Organize Imports')
 
       -- See `:help K` for why this keymap
-      utils.nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-      utils.nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+      utils.nmap(bufnr, 'K', vim.lsp.buf.hover, 'Hover Documentation')
+      utils.nmap(bufnr, '<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
       -- Lesser used LSP functionality
-      utils.nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-      utils.nmap('<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
-      utils.nmap('<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
-      utils.nmap('<leader>wl', function()
+      utils.nmap(bufnr, 'gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+      utils.nmap(bufnr, '<leader>wa', vim.lsp.buf.add_workspace_folder, '[W]orkspace [A]dd Folder')
+      utils.nmap(bufnr, '<leader>wr', vim.lsp.buf.remove_workspace_folder, '[W]orkspace [R]emove Folder')
+      utils.nmap(bufnr, '<leader>wl', function()
         print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
       end, '[W]orkspace [L]ist Folders')
 
@@ -101,86 +62,36 @@ local lsp_on_attach = function()
       end, { desc = 'Format current buffer with LSP' })
     end,
   })
+end
 
-  -- Setup neovim lua configuration
+local lsp_setup = function()
+  require('mason').setup()
+  require('mason-lspconfig').setup()
   require('neodev').setup()
 
+  -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
   local capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilities = vim.tbl_deep_extend(
-      "force",
-      capabilities,
-      require("cmp_nvim_lsp").default_capabilities()
-  )
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
+  capabilities.textDocument.completion.completionItem.resolveSupport = {
+    properties = { "documentation", "detail", "additionalTextEdits", "documentHighlight" },
+  }
+  capabilities.textDocument.colorProvider = { dynamicRegistration = false }
+  capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
-  mason.setup({ ui = { border = border } })
-
-  mason_lspconfig.setup({
+  local mason_lspconfig = require('mason-lspconfig')
+  mason_lspconfig.setup {
     ensure_installed = servers,
-    automatic_installation = true,
-    ui = { check_outdated_servers_on_open = true },
-  })
-
-  local handlers = {
+  }
+  mason_lspconfig.setup_handlers {
     function(server_name)
-      lspconfig[server_name].setup(make_conf({}))
+      require('lspconfig')[server_name].setup {
+        capabilities = capabilities,
+        on_attach = lsp_on_attach,
+        settings = servers[server_name],
+        filetypes = (servers[server_name] or {}).filetypes,
+      }
     end,
   }
-
-  if utils.exists_in_table(servers, "eslint") then
-    handlers["eslint"] = function()
-      lspconfig.eslint.setup({
-        root_dir = require("lspconfig/util").root_pattern(
-          "eslint.config.js",
-          "eslint.config.mjs",
-          ".eslintrc.js",
-          ".eslintrc.json",
-          ".eslintrc"
-        ),
-      })
-    end
-  end
-
-  if utils.exists_in_table(servers, "tsserver") then
-    handlers["tsserver"] = function()
-      lspconfig.tsserver.setup(make_conf({
-        handlers = {
-          ["textDocument/definition"] = function(err, result, ctx, ...)
-            if #result > 1 then
-              result = { result[1] }
-            end
-            vim.lsp.handlers["textDocument/definition"](err, result, ctx, ...)
-          end,
-        },
-        root_dir = require("lspconfig/util").root_pattern("tsconfig.json"),
-        settings = {
-          typescript = {
-            inlayHints = {
-              includeInlayEnumMemberValueHints = true,
-              includeInlayFunctionLikeReturnTypeHints = true,
-              includeInlayFunctionParameterTypeHints = true,
-              includeInlayParameterNameHints = "all",
-              includeInlayParameterNameHintsWhenArgumentMatchesName = true, -- false
-              includeInlayPropertyDeclarationTypeHints = true,
-              includeInlayVariableTypeHints = true,
-              includeInlayVariableTypeHintsWhenTypeMatchesName = true, -- false
-            },
-          },
-          javascript = {
-            inlayHints = {
-              includeInlayEnumMemberValueHints = true,
-              includeInlayFunctionLikeReturnTypeHints = true,
-              includeInlayFunctionParameterTypeHints = true,
-              includeInlayParameterNameHints = "all",
-              includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-              includeInlayPropertyDeclarationTypeHints = true,
-              includeInlayVariableTypeHints = true,
-              includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-            },
-          },
-        },
-      }))
-    end
-  end
 end
 
 return {
@@ -191,8 +102,14 @@ return {
       -- Helpers to install LSPs and maintain them
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
+      { 'j-hui/fidget.nvim', opts = {} },
+
+      -- Additional lua configuration, makes nvim stuff amazing!
+      'folke/neodev.nvim',
     },
-    config = lsp_on_attach,
+    config = function()
+      lsp_setup()
+    end
   },
 
   {

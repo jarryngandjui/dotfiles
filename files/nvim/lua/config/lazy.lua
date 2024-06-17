@@ -12,7 +12,7 @@ end
 local M = {}
 local is_path_loaded = false
 local is_lazy_loaded = false
-local is_setup_called = false
+local is_setup_loaded = false
 local base_path = os.getenv("HOME") .. "/.config/nvim"
 local paths = {
   base_path .. "/?.lua",
@@ -33,12 +33,12 @@ local function load_paths()
   if is_path_loaded then
     return
   end
-  
+
   for _, path in ipairs(paths) do
     utils.add_path(path)
   end
-  
-  is_path_loaded = tru
+
+  is_path_loaded = true
 
 end
 
@@ -75,17 +75,19 @@ local function load_plugins()
   require("lazy").setup(plugins)
 end
 
-function M.setup(user_config)
-  if setup_called then
+function M.setup()
+  if is_setup_loaded then
     -- only call setup once
     return
   end
-  
+
   require('config.keymaps')
   require('config.options')
   load_paths()
   load_lazy()
   load_plugins()
+
+  is_setup_load = true
 end
 
 return M

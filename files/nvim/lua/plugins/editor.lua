@@ -1,6 +1,4 @@
 -- Editor config such as tabs, autocomplete, git info
-local utils = require("utils")
-
 return {
   -- Automatically detect tabstop and shiftwidth
   'tpope/vim-sleuth',
@@ -38,7 +36,7 @@ return {
         ['<leader>h'] = { 'Git [H]unk' },
       }, { mode = 'v' })
     end,
-  },  
+  },
 
   {
     -- code completions, lsp, etc.
@@ -67,23 +65,65 @@ return {
         changedelete = { text = '~' },
       },
     },
-    keys = function()
-      local keys = {
-        { "<leader>hs", "<cmd>lua require('gitsigns').stage_hunk()<cr>", desc = "Git stage hunk" },
-        { "<leader>hr", "<cmd>lua require('gitsigns').reset_hunk()<cr>", desc = "Git reset hunk" },
-        { "<leader>hS", "<cmd>lua require('gitsigns').stage_buffer()<cr>", desc = "Git stage buffer" },
-        { "<leader>hu", "<cmd>lua require('gitsigns').undo_stage_hunk()<cr>", desc = "Git undo stage hunk" },
-        { "<leader>hR", "<cmd>lua require('gitsigns').reset_buffer()<cr>", desc = "Git reset buffer" },
-        { "<leader>hp", "<cmd>lua require('gitsigns').preview_hunk()<cr>", desc = "Git preview hunk" },
-        { "<leader>hb", function() require('gitsigns').blame_line { full = false } end, desc = "Git blame line" },
-        { "<leader>hd", "<cmd>lua require('gitsigns').diffthis()<cr>", desc = "Git diff against index" },
-        { "<leader>hD", function() require('gitsigns').diffthis('~') end, desc = "Git diff against last commit" },
-        { "<leader>tb", "<cmd>lua require('gitsigns').toggle_current_line_blame()<cr>", desc = "Toggle git blame line" },
-        { "<leader>td", "<cmd>lua require('gitsigns').toggle_deleted()<cr>", desc = "Toggle git show deleted" },
-        { "o", "ih", ":<C-U>Gitsigns select_hunk<CR>", desc = "Select git hunk" },
-        { "x", "ih", ":<C-U>Gitsigns select_hunk<CR>", desc = "Select git hunk" },
-      }
-      return keys
+    on_attach = function(bufnr)
+      local gs = package.loaded.gitsigns
+
+      local function map(mode, l, r, opts)
+        opts = opts or {}
+        opts.buffer = bufnr
+        vim.keymap.set(mode, l, r, opts)
+      end
+
+      -- Navigation
+      map({ 'n', 'v' }, ']c', function()
+        if vim.wo.diff then
+          return ']c'
+        end
+        vim.schedule(function()
+          gs.next_hunk()
+        end)
+        return '<Ignore>'
+      end, { expr = true, desc = 'Jump to next hunk' })
+
+      map({ 'n', 'v' }, '[c', function()
+        if vim.wo.diff then
+          return '[c'
+        end
+        vim.schedule(function()
+          gs.prev_hunk()
+        end)
+        return '<Ignore>'
+      end, { expr = true, desc = 'Jump to previous hunk' })
+
+      -- Actions
+      -- visual mode
+      map('v', '<leader>hs', function()
+        gs.stage_hunk { vim.fn.line '.', vim.fn.line 'v' }
+      end, { desc = 'stage git hunk' })
+      map('v', '<leader>hr', function()
+        gs.reset_hunk { vim.fn.line '.', vim.fn.line 'v' }
+      end, { desc = 'reset git hunk' })
+      -- normal mode
+      map('n', '<leader>hs', gs.stage_hunk, { desc = 'git stage hunk' })
+      map('n', '<leader>hr', gs.reset_hunk, { desc = 'git reset hunk' })
+      map('n', '<leader>hS', gs.stage_buffer, { desc = 'git Stage buffer' })
+      map('n', '<leader>hu', gs.undo_stage_hunk, { desc = 'undo stage hunk' })
+      map('n', '<leader>hR', gs.reset_buffer, { desc = 'git Reset buffer' })
+      map('n', '<leader>hp', gs.preview_hunk, { desc = 'preview git hunk' })
+      map('n', '<leader>hb', function()
+        gs.blame_line { full = false }
+      end, { desc = 'git blame line' })
+      map('n', '<leader>hd', gs.diffthis, { desc = 'git diff against index' })
+      map('n', '<leader>hD', function()
+        gs.diffthis '~'
+      end, { desc = 'git diff against last commit' })
+
+      -- Toggles
+      map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = 'toggle git blame line' })
+      map('n', '<leader>td', gs.toggle_deleted, { desc = 'toggle git show deleted' })
+
+      -- Text object
+      map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'select git hunk' })
     end,
   },
 
