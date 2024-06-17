@@ -43,6 +43,18 @@ function dependency {
 }
 
 
+echo "Installing Homebrew..."
+# Check if Homebrew is installed
+if command -v brew &> /dev/null; then
+    echo "Homebrew is already installed."
+else
+    echo "Homebrew not found. Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+    echo "Homebrew installation complete."
+fi
+
 echo "Setting up Alacritty…"
 dependency alacritty c
 brew tap homebrew/cask-fonts
