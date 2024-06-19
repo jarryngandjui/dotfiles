@@ -1,6 +1,6 @@
 #!/bin/bash
 
-function dependency {
+dependency() {
     local package=$1
     local install_type=${2:-} # Default to empty if not provided
 
@@ -42,6 +42,8 @@ function dependency {
     fi
 }
 
+dotfiles_dir=~/dotfiles
+cd $dotfiles_dir || { echo "dotfiles directory not found"; exit 1; }
 
 echo "Installing Homebrew..."
 # Check if Homebrew is installed
@@ -60,14 +62,25 @@ dependency alacritty c
 brew tap homebrew/cask-fonts
 dependency font-jetbrains-mono-nerd-font c
 mkdir -p ~/.config/alacritty
-ln -sf ~/dotfiles/files/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
-
+ln -sf $dotfiles_dir/files/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
 
 echo "Installing NeoVim…"
 dependency neovim f
+source_nvim_dir=$dotfiles_dir/files/nvim
+target_nvim_dir=~/.config/nvim
+rm -rf $target_nvim_dir
 mkdir -p ~/.config/nvim/.backup
+mkdir -p ~/.config/nvim/lua/config
+mkdir -p ~/.config/nvim/lua/plugins
 ln -sf ~/dotfiles/files/nvim/init.lua ~/.config/nvim/init.lua
 ln -sf ~/dotfiles/files/nvim/lazy-lock.json ~/.config/nvim/lazy-lock.json
+cd $source_nvim_dir
+find . -type f | while read -r file; do
+  file="${file#./}"
+  mkdir -p "$target_nvim_dir/$(dirname "$file")"
+  ln -sf $source_nvim_dir/$file $target_nvim_dir/$file
+done
+cd $dotfiles_dir
 
 echo "Installing up RipGrep…"
 # Handle skipping .gitignore files on search
@@ -111,9 +124,8 @@ fi
 
 echo "Loading zsh profile and scripts..."
 mkdir -p ~/.config/zsh
-ln -sf ~/dotfiles/files/zsh/* ~/.config/zsh
-ln -sf ~/dotfiles/files/zshrc ~/.zshrc
-ln -sf ~/dotfiles/files/zprofile ~/.zprofile
+ln -sf $dotfiles_dir/files/zsh/* ~/.config/zsh
+ln -sf $dotfiles_dir/files/zshrc ~/.zshrc
+ln -sf $dotfiles_dir/files/zprofile ~/.zprofile
 echo "Loaded zsh profile and scripts."
-
 
