@@ -13,6 +13,7 @@ local formatters = {
   css = { "stylelint", "prettier" },
   sh = { "shellcheck", "shfmt" },
   lua = { "stylua" },
+  python = { "isort", "black" },
 }
 local servers = {
   "eslint",
@@ -23,6 +24,18 @@ local servers = {
   "tailwindcss",
   "jsonls",
   "vimls",
+  pylsp = {
+    settings = {
+      pylsp = {
+        plugins = {
+          pycodestyle = {
+            ignore = {"E501"},
+            maxLineLength = 79
+          }
+        }
+      }
+    }
+  },
 }
 
 -- _G makes this function available to vimscript lua calls
@@ -133,6 +146,24 @@ return {
       { "<leader>xd", "<cmd>TroubleToggle document_diagnostics<cr>" },
       { "<leader>xq", "<cmd>TroubleToggle quickfix<cr>" },
       { "<leader>xl", "<cmd>TroubleToggle loclist<cr>" },
+    },
+  },
+  {
+    'linux-cultist/venv-selector.nvim',
+    dependencies = {
+      'neovim/nvim-lspconfig',
+      'nvim-telescope/telescope.nvim',
+      'mfussenegger/nvim-dap-python'
+    },
+    opts = {
+      -- Your options go here
+      name = "venv",
+      auto_refresh = false
+    },
+    event = 'VeryLazy',
+    keys = {
+      { '<leader>vs', '<cmd>VenvSelect<cr>' },
+      { '<leader>vc', '<cmd>VenvSelectCached<cr>' },
     },
   },
 }
