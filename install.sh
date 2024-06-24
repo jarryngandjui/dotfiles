@@ -150,7 +150,7 @@ case "$1" in
     nvim) nvim_setup;;
     shell) shell_setup;;
     all)
-        homebew_setup
+        homebrew_setup
         nvim_setup
         shell_setup
         ;;
