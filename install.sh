@@ -67,10 +67,16 @@ function homebrew_setup ()
     # Node version manager .nvmrc files
     dependency n f
 
-    echo "Setting up Alacritty…"
-    dependency alacritty c
+    echo "Installing up fd…"
+    # Fast program to search filesystem 
+    dependency fd f
+
+    echo "Installing up Jetbrains font…"
     brew tap homebrew/cask-fonts
     dependency font-jetbrains-mono-nerd-font c
+
+    echo "Installing up Alacritty…"
+    dependency alacritty c
     mkdir -p ~/.config/alacritty
     ln -sf $dotfiles_dir/files/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
 }
