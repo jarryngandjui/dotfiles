@@ -176,6 +176,7 @@ return {
     keys = {
       { "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "Explorer Toggle" },
       { "<leader>ef", "<cmd>NvimTreeFocus<cr>", desc = "Explorer Focus" },
+      { "<leader>eF", "<cmd>NvimTreeFindFile<cr>", desc = "Explorer Find File" },
     },
   },
 
