@@ -39,20 +39,6 @@ return {
   },
 
   {
-    -- code completions, lsp, etc.
-    'hrsh7th/nvim-cmp',
-    dependencies = {
-      {
-	"L3MON4D3/LuaSnip",
-	version = "v2.1",
-	build = "make install_jsregexp"
-      },
-      'saadparwaiz1/cmp_luasnip',
-      'hrsh7th/cmp-nvim-lsp',
-      'hrsh7th/cmp-path',
-    },
-  },
-  {
     -- add gutter symbols gutter or sign column 
     -- to indicate added, changed
     'lewis6991/gitsigns.nvim',

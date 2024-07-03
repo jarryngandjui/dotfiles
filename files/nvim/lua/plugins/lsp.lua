@@ -41,6 +41,32 @@ local servers = {
 -- _G makes this function available to vimscript lua calls
 _G.lsp_organize_imports = utils.lsp_organize_imports
 
+local completion_setup = function()
+  local cmp = require('cmp')
+
+  cmp.setup({
+    snippet = {
+      expand = function(args)
+        require('luasnip').lsp_expand(args.body)
+      end,
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    }),
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'luasnip' },
+      { name = 'path' },
+    }, {
+      { name = 'buffer' },
+    })
+  })
+end
+
 local lsp_on_attach = function(_, bufnr)
   vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(_)
@@ -108,6 +134,24 @@ local lsp_setup = function()
 end
 
 return {
+  {
+    -- code completions, lsp, etc.
+    'hrsh7th/nvim-cmp',
+    dependencies = {
+      {
+	"L3MON4D3/LuaSnip",
+	version = "v2.1",
+	build = "make install_jsregexp"
+      },
+      'saadparwaiz1/cmp_luasnip',
+      'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-path',
+    },
+    config = function()
+      completion_setup()
+    end
+  },
+
   {
     "neovim/nvim-lspconfig",
     lazy = false,
