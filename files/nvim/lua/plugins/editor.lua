@@ -3,6 +3,9 @@ return {
   -- Automatically detect tabstop and shiftwidth
   'tpope/vim-sleuth',
 
+  -- Automatically complete {[()]} 
+  { "windwp/nvim-autopairs", config = true },
+
   -- Full signature help, docs and completion
   {
     "folke/neodev.nvim",
