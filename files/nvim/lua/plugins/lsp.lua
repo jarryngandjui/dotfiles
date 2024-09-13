@@ -1,19 +1,19 @@
 -- LSP configurations
 local utils = require("utils")
 local formatters = {
-  javascript = { "prettier" },
-  javascriptreact = { "prettier" },
+  -- javascript = { "prettier" },
+  -- javascriptreact = { "prettier" },
   typescript = { "prettier" },
   typescriptreact = { "prettier" },
   astro = { "prettier" },
   json = { "prettier" },
   jsonc = { "prettier" },
-  html = { "prettier" },
+  -- html = { "prettier" },
   yaml = { "prettier" },
   css = { "stylelint", "prettier" },
   sh = { "shellcheck", "shfmt" },
   lua = { "stylua" },
-  python = { "isort", "black" },
+  -- python = { "isort", "black" },
 }
 local servers = {
   "eslint",
