@@ -40,6 +40,21 @@ return {
       }, { mode = 'v' })
     end,
   },
+  
+  -- Single tabpage interface for easily cycling through diffs
+  {
+    "sindrets/diffview.nvim",
+    dependencies = "nvim-lua/plenary.nvim",
+    config = function()
+      require("diffview").setup({
+        -- Your custom configuration options here
+      })
+      
+      vim.api.nvim_set_keymap('n', '<leader>dvo', ':DiffviewOpen<CR>', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<leader>dvc', ':DiffviewClose<CR>', { noremap = true, silent = true })
+      vim.api.nvim_set_keymap('n', '<leader>dvr', ':DiffviewRefresh<CR>', { noremap = true, silent = true })
+    end
+  },
 
   {
     -- add gutter symbols gutter or sign column 
