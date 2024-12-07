@@ -79,6 +79,11 @@ function homebrew_setup ()
     dependency alacritty c
     mkdir -p ~/.config/alacritty
     ln -sf $dotfiles_dir/files/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
+
+    echo "Installing up Aerospace…"
+    dependency nikitabobko/tap/aerospace c
+    mkdir -p ~/.config/aerospace
+    ln -sf $dotfiles_dir/files/aerospace/aerospace.toml ~/.config/aerospace/aerospace.toml
 }
 
 function nvim_setup ()
