@@ -90,7 +90,8 @@ function homebrew_setup ()
     else
         echo "TPM directory already exists. Skipping clone operation."
     fi
-    ln -sf $dotfiles_config_dir/tmux/.tmux.conf ~/.tmux.conf
+    mkdir -p ~/.config/tmux
+    ln -sf $dotfiles_config_dir/tmux/tmux.conf ~/.config/tmux/tmux.conf
 
     echo "Installing up Aerospace…"
     dependency nikitabobko/tap/aerospace c
