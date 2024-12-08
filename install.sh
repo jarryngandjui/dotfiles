@@ -1,5 +1,9 @@
 #!/bin/bash
 
+dotfiles_dir=~/dotfiles
+dotfiles_config_dir=$dotfiles_dir/files
+cd $dotfiles_dir || { echo "dotfiles directory not found"; exit 1; }
+
 dependency() {
     local package=$1
     local install_type=${2:-} # Default to empty if not provided
@@ -42,9 +46,6 @@ dependency() {
     fi
 }
 
-dotfiles_dir=~/dotfiles
-cd $dotfiles_dir || { echo "dotfiles directory not found"; exit 1; }
-
 function homebrew_setup ()
 {
     echo "Installing Homebrew..."
@@ -78,19 +79,19 @@ function homebrew_setup ()
     echo "Installing up Alacritty…"
     dependency alacritty c
     mkdir -p ~/.config/alacritty
-    ln -sf $dotfiles_dir/files/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
+    ln -sf $dotfiles_config_dir/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
 
     echo "Installing up Aerospace…"
     dependency nikitabobko/tap/aerospace c
     mkdir -p ~/.config/aerospace
-    ln -sf $dotfiles_dir/files/aerospace/aerospace.toml ~/.config/aerospace/aerospace.toml
+    ln -sf $dotfiles_config_dir/aerospace/aerospace.toml ~/.config/aerospace/aerospace.toml
 }
 
 function nvim_setup ()
 {
     echo "Installing NeoVim…"
     dependency neovim f
-    source_nvim_dir=$dotfiles_dir/files/nvim
+    source_nvim_dir=$dotfiles_config_dir/nvim
     target_nvim_dir=~/.config/nvim
     rm -rf $target_nvim_dir
     mkdir -p ~/.config/nvim/.backup
@@ -144,9 +145,9 @@ function shell_setup ()
 
     echo "Loading zsh profile and scripts..."
     mkdir -p ~/.config/zsh
-    ln -sf $dotfiles_dir/files/zsh/* ~/.config/zsh
-    ln -sf $dotfiles_dir/files/zshrc ~/.zshrc
-    ln -sf $dotfiles_dir/files/zprofile ~/.zprofile
+    ln -sf $dotfiles_config_dir/zsh/* ~/.config/zsh
+    ln -sf $dotfiles_config_dir/zshrc ~/.zshrc
+    ln -sf $dotfiles_config_dir/zprofile ~/.zprofile
     echo "Loaded zsh profile and scripts."
 }
 
