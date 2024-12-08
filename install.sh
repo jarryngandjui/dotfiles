@@ -81,6 +81,10 @@ function homebrew_setup ()
     mkdir -p ~/.config/alacritty
     ln -sf $dotfiles_config_dir/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
 
+    echo "Installing up Tmux…"
+    dependency tmux f
+    ln -sf $dotfiles_config_dir/tmux/.tmux.conf ~/.tmux.conf
+
     echo "Installing up Aerospace…"
     dependency nikitabobko/tap/aerospace c
     mkdir -p ~/.config/aerospace
