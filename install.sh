@@ -83,6 +83,13 @@ function homebrew_setup ()
 
     echo "Installing up Tmux…"
     dependency tmux f
+    TPM_DIR="$HOME/.tmux/plugins/tpm"
+    if [ ! -d "$TPM_DIR" ]; then
+        git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
+        echo "Tmux Plugin Manager (TPM) directory cloned successfully."
+    else
+        echo "TPM directory already exists. Skipping clone operation."
+    fi
     ln -sf $dotfiles_config_dir/tmux/.tmux.conf ~/.tmux.conf
 
     echo "Installing up Aerospace…"
