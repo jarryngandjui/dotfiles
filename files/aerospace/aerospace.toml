@@ -172,9 +172,9 @@ shift-down = ['volume set 0', 'mode main']
 
 # Move nodes to window on lunch 
 # To setup additional commands by app-id run: $aerospace list-apps | pbcopy
-[[on-window-detected]]
-if.app-id = 'com.brave.Browser'
-run = 'move-node-to-workspace B'
+# [[on-window-detected]]
+# if.app-id = 'com.brave.Browser'
+# run = 'move-node-to-workspace B'
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Safari'
@@ -208,6 +208,6 @@ run = 'move-node-to-workspace R'
 if.app-id = 'com.apple.iCal'
 run = 'move-node-to-workspace R'
 
-[[on-window-detected]]
-if.app-id = 'org.alacritty'
-run = 'move-node-to-workspace T'
+# [[on-window-detected]]
+# if.app-id = 'org.alacritty'
+# run = 'move-node-to-workspace T'
