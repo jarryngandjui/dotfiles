@@ -118,8 +118,13 @@ function nvim_setup ()
       ln -sf $source_nvim_dir/$file $target_nvim_dir/$file
     done
     cd $dotfiles_dir
-}
 
+
+    echo "Installing NeoVim LSP dependency…"
+    n auto 
+    npm install -g pyright
+    pip3 install "python-lsp-server[all]" pylsp-mypy python-lsp-black
+}
 
 function shell_setup ()
 {
