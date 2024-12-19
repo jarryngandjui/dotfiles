@@ -46,7 +46,7 @@ dependency() {
     fi
 }
 
-function homebrew_setup ()
+function setup_homebrew ()
 {
     echo "Installing Homebrew..."
     # Check if Homebrew is installed
@@ -81,6 +81,15 @@ function homebrew_setup ()
     mkdir -p ~/.config/alacritty
     ln -sf $dotfiles_config_dir/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
 
+    echo "Installing up Aerospace…"
+    dependency nikitabobko/tap/aerospace c
+    mkdir -p ~/.config/aerospace
+    ln -sf $dotfiles_config_dir/aerospace/aerospace.toml ~/.config/aerospace/aerospace.toml
+}
+
+
+function setup_tmux ()
+{
     echo "Installing up Tmux…"
     dependency tmux f
     TPM_DIR="$HOME/.tmux/plugins/tpm"
@@ -90,32 +99,29 @@ function homebrew_setup ()
     else
         echo "TPM directory already exists. Skipping clone operation."
     fi
-    mkdir -p ~/.config/tmux
-    ln -sf $dotfiles_config_dir/tmux/tmux.conf ~/.config/tmux/tmux.conf
-
-    echo "Installing up Aerospace…"
-    dependency nikitabobko/tap/aerospace c
-    mkdir -p ~/.config/aerospace
-    ln -sf $dotfiles_config_dir/aerospace/aerospace.toml ~/.config/aerospace/aerospace.toml
+    target_tmux_dir=~/.config/tmux
+    rm -rf $target_tmux_dir
+    mkdir -p $target_tmux_dir
+    ln -sf $dotfiles_config_dir/tmux/tmux.conf $target_tmux_dir/tmux.conf
 }
 
-function nvim_setup ()
+function setup_nvim ()
 {
     echo "Installing NeoVim…"
     dependency neovim f
     source_nvim_dir=$dotfiles_config_dir/nvim
     target_nvim_dir=~/.config/nvim
     rm -rf $target_nvim_dir
-    mkdir -p ~/.config/nvim/.backup
-    mkdir -p ~/.config/nvim/lua/config
-    mkdir -p ~/.config/nvim/lua/plugins
-    ln -sf ~/dotfiles/files/nvim/init.lua ~/.config/nvim/init.lua
-    ln -sf ~/dotfiles/files/nvim/lazy-lock.json ~/.config/nvim/lazy-lock.json
+    mkdir -p $target_nvim_dir/.backup
+    mkdir -p $target_nvim_dir/lua/config
+    mkdir -p $target_nvim_dir/lua/plugins
+    ln -sf ~/dotfiles/files/nvim/init.lua $target_nvim_dir/init.lua
+    ln -sf ~/dotfiles/files/nvim/lazy-lock.json $target_nvim_dir/lazy-lock.json
     cd $source_nvim_dir
     find . -type f | while read -r file; do
       file="${file#./}"
       mkdir -p "$target_nvim_dir/$(dirname "$file")"
-      ln -sf $source_nvim_dir/$file $target_nvim_dir/$file
+      ln -sf "$source_nvim_dir/$file" "$target_nvim_dir/$file"
     done
     cd $dotfiles_dir
 
@@ -126,7 +132,7 @@ function nvim_setup ()
     pip3 install "python-lsp-server[all]" pylsp-mypy python-lsp-black
 }
 
-function shell_setup ()
+function setup_shell ()
 {
     echo "Installing Zsh…"
     dependency zsh f
@@ -169,16 +175,18 @@ function shell_setup ()
 }
 
 case "$1" in
-    homebrew) homebrew_setup;;
-    nvim) nvim_setup;;
-    shell) shell_setup;;
+    homebrew) setup_homebrew;;
+    tmux) setup_tmux;;
+    nvim) setup_nvim;;
+    shell) setup_shell;;
     all)
-        homebrew_setup
-        nvim_setup
-        shell_setup
+        setup_homebrew
+        setup_shell
+        setup_nvim
+        setup_tmux
         ;;
     *)
-      echo -e "\nUsage: $(basename "$0") {homebrew|nvim|shell|all}\n"
+      echo -e "\nUsage: $(basename "$0") {homebrew|tmux|nvim|shell|all}\n"
       return 0
       ;;
 esac
