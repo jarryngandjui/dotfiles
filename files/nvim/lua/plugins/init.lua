@@ -1,7 +1,12 @@
 return {
   -- Improve vim skills by playing games
   {
-    'ThePrimeagen/vim-be-good'
+    "ThePrimeagen/vim-be-good",
+  },
+
+  {
+    "christoomey/vim-tmux-navigator",
+    lazy = false,
   },
 
   {
@@ -108,9 +113,16 @@ return {
   },
 
   -- Single tabpage interface for easily cycling through diffs
-  {
-    "sindrets/diffview.nvim",
-    dependencies = "nvim-lua/plenary.nvim",
-  },
+  { "tpope/vim-fugitive" },
 
+  { "rbong/vim-flog", dependencies = {
+    "tpope/vim-fugitive",
+  }, lazy = false },
+
+  { "sindrets/diffview.nvim", lazy = false },
+
+  {
+    "kevinhwang91/nvim-bqf",
+    lazy = false,
+  },
 }
