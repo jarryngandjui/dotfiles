@@ -77,7 +77,6 @@ return {
           "eslint", -- ESLint LSP
           "nextls", -- Next.js LSP
           "jsonls", -- JSON LSP
-          "ts_ls", -- TypeScript/JavaScript LSP
           "bashls", -- Bash LSP
           "cssls", -- CSS LSP
           "dockerls", -- Dockerfile LSP

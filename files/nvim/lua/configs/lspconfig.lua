@@ -105,14 +105,10 @@ lspconfig.pylsp.setup {
       plugins = {
         ruff = {
           enabled = true,
+          formatEnabled = true,
           organizeImports = true,
         },
-        black = { enabled = true },
         mypy = { enabled = true },
-        pycodestyle = { enabled = false },
-        flake8 = { enabled = false }, -- duplicate ruff warnings
-        pylint = { enabled = false }, -- duplicate ruff warnings
-        isort = { enabled = false, profile = "black" }, -- duplicate ruff sorting
       },
       filetypes = { "python" },
     },

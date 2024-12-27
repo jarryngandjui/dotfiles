@@ -48,6 +48,7 @@ dependency() {
 
 function setup_homebrew ()
 {
+    cd "$dotfiles_dir"
     echo "Installing Homebrew..."
     # Check if Homebrew is installed
     if command -v brew &> /dev/null; then
@@ -72,6 +73,11 @@ function setup_homebrew ()
     # Fast program to search filesystem 
     dependency fd f
 
+
+    echo "Installing up pipx…"
+    # Python module manager 
+    dependency pipx 
+
     echo "Installing up Jetbrains font…"
     brew tap homebrew/cask-fonts
     dependency font-jetbrains-mono-nerd-font c
@@ -90,6 +96,7 @@ function setup_homebrew ()
 
 function setup_tmux ()
 {
+    cd "$dotfiles_dir"
     echo "Installing up Tmux…"
     dependency tmux f
     TPM_DIR="$HOME/.tmux/plugins/tpm"
@@ -107,6 +114,7 @@ function setup_tmux ()
 
 function setup_nvim ()
 {
+    cd "$dotfiles_dir"
     echo "Installing NeoVim…"
     dependency neovim f
     source_nvim_dir=$dotfiles_config_dir/nvim
@@ -127,15 +135,21 @@ function setup_nvim ()
 
 
     echo "Installing NeoVim LSP dependency…"
+    dependency n 
     n auto 
-    npm install -g pyright
     npm install -g typescript typescript-language-server # ts_ls
-    pip install python-lsp-server
-    pip install python-lsp-ruff
+
+    dependency pipx 
+    pipx install python-lsp-server
+    cd ~/.local/share/pipx/venvs/python-lsp-server
+    source base/activate
+    python3 -m pip install pylsp-mypy
+    python3 -m pip install python-lsp-ruff --no-deps
 }
 
 function setup_shell ()
 {
+    cd "$dotfiles_dir"
     echo "Installing Zsh…"
     dependency zsh f
     OH_MY_ZSH=$HOME/.oh-my-zsh
