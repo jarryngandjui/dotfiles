@@ -12,6 +12,7 @@ export PATH="/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/loc
 export PATH="/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:$PATH"
 export PATH="/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:$PATH"
 export PATH="$HOME/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
+export PATH="$HOME/Library/Python/3.9/bin:$PATH" # Add python path for nvim pylsp
 
 # Quick access files and directories
 export PROJECTS=$HOME/Projects

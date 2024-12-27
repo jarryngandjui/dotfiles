@@ -129,7 +129,9 @@ function setup_nvim ()
     echo "Installing NeoVim LSP dependency…"
     n auto 
     npm install -g pyright
-    pip3 install "python-lsp-server[all]" pylsp-mypy python-lsp-black
+    npm install -g typescript typescript-language-server # ts_ls
+    pip install python-lsp-server
+    pip install python-lsp-ruff
 }
 
 function setup_shell ()
