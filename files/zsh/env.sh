@@ -19,6 +19,7 @@ export PATH="/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/app
 # Quick access files and directories
 export PROJECTS=$HOME/Projects
 export DOTFILES=$HOME/dotfiles
+export NOTES="$HOME/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Second\ brain"
 export CONFIG=$DOTFILES/files
 export ZSHRC=$CONFIG/zshrc
 export ZSHPROFILE=$CONFIG/zprofile
@@ -32,6 +33,7 @@ export NVIMLOCK=$CONFIG/nvim/lazy-lock.json
 export N_PREFIX=$HOME/n
 
 alias projects="cd $PROJECTS"
+alias secondbrain="cd $NOTES"
 alias dotfiles="cd $DOTFILES"
 alias zshrc="nvim $ZSHRC"
 alias zshalias="nvim $ZSHALIAS"
