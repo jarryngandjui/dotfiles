@@ -133,8 +133,10 @@ function setup_nvim ()
     done
     cd $dotfiles_dir
 
+    echo "Installing clang lsp dependency…"
+    dependency llvm f
 
-    echo "Installing NeoVim LSP dependency…"
+    echo "Installing Typescript lsp dependency…"
     dependency n 
     n auto 
     npm install -g typescript typescript-language-server # ts_ls
