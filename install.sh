@@ -76,7 +76,12 @@ function setup_homebrew ()
 
     echo "Installing up pipx…"
     # Python module manager 
-    dependency pipx 
+    dependency pipx f
+
+    echo "Installing docker and docker-compose"
+    dependency docker f
+    dependency docker-compose f
+
 
     echo "Installing up Jetbrains font…"
     brew tap homebrew/cask-fonts
