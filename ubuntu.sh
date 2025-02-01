@@ -23,15 +23,43 @@ dependency() {
     fi
 }
 
-# Update package lists
-update_packages() {
-    echo "Updating package lists..."
-    sudo apt-get update
+# Firewall
+setup_firewall() {
+  # Check if UFW is installed
+  if ! command -v ufw &> /dev/null; then
+      echo "UFW not found. Installing UFW..."
+      sudo apt update
+      sudo apt install ufw -y
+  else
+      echo "UFW is already installed."
+  fi
+
+  # Check if SSH is already allowed
+  if ! sudo ufw status | grep -q "OpenSSH"; then
+      echo "Allowing SSH (port 22)..."
+      sudo ufw allow OpenSSH
+  fi
+
+  # Enable UFW if it is not already active
+  if sudo ufw status | grep -q "inactive"; then
+      echo "Enabling UFW..."
+      sudo ufw enable
+  else
+      echo "UFW is already active."
+  fi
+
+  # Check UFW status to confirm everything is working
+  echo "Checking UFW status..."
+  sudo ufw status verbose
+
+  echo "UFW setup complete. SSH should now be allowed."
+
 }
 
 # Install CLI packages: tmux, ripgrep, fd-find, neovim, grep, and zsh
 setup_cli_packages() {
-    update_packages
+    echo "Updating package lists..."
+    sudo apt-get update
 
     dependency tmux
     dependency ripgrep
@@ -138,6 +166,9 @@ setup_shell() {
 case "$1" in
     cli)
         setup_cli_packages
+        ;;
+    firewall)
+        setup_firewall
         ;;
     tmux)
         setup_tmux
