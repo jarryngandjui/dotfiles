@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# Define dotfiles directories (adjust as necessary)
+# Define dotfiles directories (adjust these paths if needed)
 dotfiles_dir=~/dotfiles
 dotfiles_config_dir="$dotfiles_dir/files"
 
@@ -30,7 +30,7 @@ update_packages() {
     sudo apt-get update
 }
 
-# Install CLI packages: tmux, ripgrep, fd-find, neovim, grep
+# Install CLI packages: tmux, ripgrep, fd-find, neovim, grep, and zsh
 setup_cli_packages() {
     update_packages
 
@@ -39,9 +39,9 @@ setup_cli_packages() {
     dependency fd-find
     dependency neovim
     dependency grep
+    dependency zsh
 
-    # fd-find installs the binary as 'fdfind' on Ubuntu.
-    # Create a symlink so you can use 'fd' instead.
+    # fd-find installs the binary as 'fdfind'; create a symlink for convenience.
     if ! command -v fd &> /dev/null; then
         if command -v fdfind &> /dev/null; then
             echo "Creating symlink for fd (linking fdfind to fd)..."
@@ -52,10 +52,9 @@ setup_cli_packages() {
     fi
 }
 
-# Setup tmux configuration and install Tmux Plugin Manager (TPM)
+# Setup Tmux configuration and install Tmux Plugin Manager (TPM)
 setup_tmux() {
     echo "Setting up Tmux configuration..."
-
     TPM_DIR="$HOME/.tmux/plugins/tpm"
     if [ ! -d "$TPM_DIR" ]; then
         echo "Cloning Tmux Plugin Manager..."
@@ -66,24 +65,21 @@ setup_tmux() {
 
     target_tmux_dir="$HOME/.config/tmux"
     mkdir -p "$target_tmux_dir"
-    echo "Linking tmux config..."
+    echo "Linking tmux configuration..."
     ln -sf "$dotfiles_config_dir/tmux/tmux.conf" "$target_tmux_dir/tmux.conf"
 }
 
 # Setup Neovim configuration
 setup_nvim() {
     echo "Setting up Neovim configuration..."
-
     target_nvim_dir="$HOME/.config/nvim"
-    # Remove existing configuration (optional; remove if you prefer merging)
     rm -rf "$target_nvim_dir"
     mkdir -p "$target_nvim_dir"
 
-    # Link the main init file (adjust if you use init.lua instead)
     echo "Linking Neovim init file..."
     ln -sf "$dotfiles_config_dir/nvim/init.vim" "$target_nvim_dir/init.vim"
 
-    # Optionally, link additional configuration files recursively:
+    # Optionally, link additional configuration files recursively.
     cd "$dotfiles_config_dir/nvim"
     find . -type f | while read -r file; do
       file="${file#./}"
@@ -93,7 +89,54 @@ setup_nvim() {
     cd "$dotfiles_dir"
 }
 
-# Main script: allow choosing which part of the setup to run
+# Setup Zsh and Oh My Zsh configuration
+setup_shell() {
+    echo "Setting up Zsh and Oh My Zsh configuration..."
+
+    # Zsh is already installed as part of CLI packages.
+    OH_MY_ZSH="$HOME/.oh-my-zsh"
+    OH_MY_ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+
+    if [ -d "$OH_MY_ZSH" ]; then
+      echo "Oh My Zsh is already installed."
+    else
+      echo "Installing Oh My Zsh..."
+      # Install Oh My Zsh unattended so it doesn't switch shells automatically.
+      sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+      # Change default shell to zsh.
+      chsh -s "$(which zsh)"
+      echo "Oh My Zsh installed successfully."
+    fi
+
+    # Install Dracula theme for Zsh.
+    DRACULA_THEME_DIR="${OH_MY_ZSH_CUSTOM}/themes/dracula"
+    if [ ! -d "$DRACULA_THEME_DIR" ]; then
+        echo "Installing Dracula theme..."
+        git clone https://github.com/dracula/zsh.git "$DRACULA_THEME_DIR"
+        ln -sf "${DRACULA_THEME_DIR}/dracula.zsh-theme" "${OH_MY_ZSH_CUSTOM}/themes/dracula.zsh-theme"
+        echo "Dracula theme installed."
+    else
+        echo "Dracula theme already installed."
+    fi
+
+    # Install zsh-autosuggestions plugin.
+    ZSH_AUTOSUGGESTIONS_DIR="${OH_MY_ZSH_CUSTOM}/plugins/zsh-autosuggestions"
+    if [ ! -d "$ZSH_AUTOSUGGESTIONS_DIR" ]; then
+        echo "Installing zsh-autosuggestions..."
+        git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_AUTOSUGGESTIONS_DIR"
+    else
+        echo "zsh-autosuggestions is already installed."
+    fi
+
+    # Link Zsh configuration files from your dotfiles.
+    echo "Linking Zsh configuration files..."
+    mkdir -p "$HOME/.config/zsh"
+    ln -sf "$dotfiles_config_dir/zsh/zshrc" "$HOME/.zshrc"
+    ln -sf "$dotfiles_config_dir/zsh/zprofile" "$HOME/.zprofile"
+    ln -sf "$dotfiles_config_dir/zsh/"* "$HOME/.config/zsh/"
+}
+
+# Main: Choose which parts to run based on the argument passed.
 case "$1" in
     cli)
         setup_cli_packages
@@ -104,13 +147,17 @@ case "$1" in
     nvim)
         setup_nvim
         ;;
+    shell)
+        setup_shell
+        ;;
     all)
         setup_cli_packages
-        setup_tmux
+        setup_shell
         setup_nvim
+        setup_tmux
         ;;
     *)
-        echo -e "\nUsage: $(basename "$0") {cli|tmux|nvim|all}\n"
+        echo -e "\nUsage: $(basename "$0") {cli|tmux|nvim|shell|all}\n"
         exit 1
         ;;
 esac
