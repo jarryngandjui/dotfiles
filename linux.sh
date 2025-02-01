@@ -8,7 +8,6 @@ dotfiles_config_dir="$dotfiles_dir/files"
 # Ensure the dotfiles directory exists
 if [ ! -d "$dotfiles_dir" ]; then
   echo "Dotfiles directory ($dotfiles_dir) not found."
-  exit 1
 fi
 
 cd "$dotfiles_dir"
