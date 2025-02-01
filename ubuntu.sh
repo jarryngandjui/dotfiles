@@ -131,7 +131,6 @@ setup_shell() {
     echo "Linking Zsh configuration files..."
     mkdir -p "$HOME/.config/zsh"
     ln -sf "$dotfiles_config_dir/zsh/zshrc" "$HOME/.zshrc"
-    ln -sf "$dotfiles_config_dir/zsh/zprofile" "$HOME/.zprofile"
     ln -sf "$dotfiles_config_dir/zsh/"* "$HOME/.config/zsh/"
 }
 
