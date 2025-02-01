@@ -79,9 +79,8 @@ function setup_homebrew ()
     dependency pipx f
 
     echo "Installing docker and docker-compose"
-    dependency docker f
-    dependency docker-compose f
-
+    dependency docker c
+    # dependency docker-compose f
 
     echo "Installing up Jetbrains font…"
     brew tap homebrew/cask-fonts
