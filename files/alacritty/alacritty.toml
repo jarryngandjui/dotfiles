@@ -1,5 +1,3 @@
-live_config_reload = true
-shell = "/opt/homebrew/bin/zsh"
 
 [colors]
 draw_bold_text_with_bright_colors = true
@@ -50,3 +48,9 @@ opacity = 0.98
 [window.padding]
 x = 10
 y = 10
+
+[general]
+live_config_reload = true
+
+[terminal]
+shell = "/opt/homebrew/bin/zsh"
