@@ -95,6 +95,10 @@ function setup_homebrew ()
     dependency nikitabobko/tap/aerospace c
     mkdir -p ~/.config/aerospace
     ln -sf $dotfiles_config_dir/aerospace/aerospace.toml ~/.config/aerospace/aerospace.toml
+    
+    echo "Installing up Raycast"
+    brew install --cask raycast
+    dependency raycast c
 }
 
 
