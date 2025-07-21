@@ -49,8 +49,9 @@ opacity = 0.98
 x = 10
 y = 10
 
-[general]
-live_config_reload = true
+# [general]
+# live_config_reload = true
 
-[terminal]
-shell = "/opt/homebrew/bin/zsh"
+# [terminal]
+# shell = "/opt/homebrew/bin/zsh"
+
