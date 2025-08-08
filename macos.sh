@@ -53,6 +53,9 @@ function setup_homebrew ()
     # Check if Homebrew is installed
     if command -v brew &> /dev/null; then
         echo "Homebrew is already installed."
+        echo "Updating Homebrew"
+        brew update
+        brew upgrade
     else
         echo "Homebrew not found. Installing Homebrew..."
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -73,6 +76,9 @@ function setup_homebrew ()
     # Fast program to search filesystem 
     dependency fd f
 
+    echo "Installing up pnpm…"
+    # Performant node package module 
+    dependency pnpm f 
 
     echo "Installing up pipx…"
     # Python module manager 
