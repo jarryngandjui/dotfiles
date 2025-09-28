@@ -1,0 +1,114 @@
+# Environment Variables
+# =====================
+
+# Executables
+export PATH="/opt/homebrew/bin:$PATH"
+export PATH="/opt/homebrew/sbin:$PATH"
+export PATH="/usr/local/bin:$PATH"
+export PATH="/usr/bin:$PATH"
+export PATH="/usr/sbin:$PATH"
+export PATH="/bin:$PATH"
+export PATH="/sbin:$PATH"
+export PATH="/System/Cryptexes/App/usr/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
+export PATH="$HOME/Library/Python/3.9/bin:$PATH" # Add python path for nvim pylsp
+export PATH="/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:$PATH"
+export PATH="/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:$PATH"
+export PATH="/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:$PATH"
+
+# Quick access files and directories
+export PROJECTS=$HOME/Projects
+export DOTFILES=$HOME/dotfiles
+export NOTES="$HOME/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Second\ brain"
+export CONFIG=$DOTFILES
+export ALACRITTYCONFIG=$CONFIG/alacritty/alacritty.toml
+export NVIMCONF=$CONFIG/nvim/
+export NVIMINIT=$CONFIG/nvim/init.lua
+export NVIMLOCK=$CONFIG/nvim/lazy-lock.json
+
+export STARSHIPCONF=$CONFIG/starship/starship.toml
+export TMUXCONF=$CONFIG/tmux/tmux.conf
+export ZSHRC=$CONFIG/zsh/zshrc
+export ZSHPROFILE=$CONFIG/zsh/zprofile
+
+# Node version manager directory
+export N_PREFIX=$HOME/n
+
+# Aliases
+# =======
+
+# Editor
+alias vim="nvim"
+
+# Python
+alias python='eval $(which python3)'
+alias pip='eval $(which pip3)'
+alias activate='source ./venv/bin/activate'
+
+# Quick navigation
+alias projects="cd $PROJECTS"
+alias secondbrain="cd $NOTES"
+alias dotfiles="cd $DOTFILES"
+
+# Configuration editing
+alias alacrittyconfig="vim $ALACRITTYCONFIG"
+alias nvimconf="vim $NVIMCONF"
+alias starshipconf="vim $STARSHIPCONF"
+alias tmuxconf="vim $TMUXCONF"
+alias zshrc="vim $ZSHRC"
+alias zprofile="vim $ZSHPROFILE"
+
+# Git
+# ===
+
+# git add -u : updates existing files that are tracked and does not add new ones
+alias gat="ga -u"
+
+# Delete a local branch
+function gbdl() {
+  branch_name="$(git symbolic-ref HEAD 2>/dev/null)" ||
+  branch_name="(unnamed branch)"     # detached HEAD
+  branch_name=${branch_name##refs/heads/}
+    
+  gcm
+  gb -D "${branch_name}"
+}
+
+# Delete a remote branch
+function gbdr() {
+  branch_name="$(git symbolic-ref HEAD 2>/dev/null)" ||
+  branch_name="(unnamed branch)"     # detached HEAD
+  branch_name=${branch_name##refs/heads/}
+
+  gcm
+  gp origin --delete "${branch_name}"
+}
+
+# Delete a local and remote branch
+function gbdrl() {
+  branch_name="$(git symbolic-ref HEAD 2>/dev/null)" ||
+  branch_name="(unnamed branch)"     # detached HEAD
+  branch_name=${branch_name##refs/heads/}
+
+  gcm
+  gp origin --delete "${branch_name}"
+  gb -D "${branch_name}"
+}
+
+# Docker CLI completions
+# ======================
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=(/Users/maestro/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
+
+# Terraform completions
+# =====================
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /opt/homebrew/bin/terraform terraform
+
+# Starship prompt
+# ===============
+eval "$(starship init zsh)"

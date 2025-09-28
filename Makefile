@@ -1,0 +1,192 @@
+# Dotfiles Setup Makefile
+# Idempotent setup for macOS terminal environment
+
+# Variables
+DOTFILES_DIR := $(shell pwd)
+DOTFILES_CONFIG_DIR := $(DOTFILES_DIR)
+HOME_DIR := $(HOME)
+CONFIG_DIR := $(HOME_DIR)/.config
+
+# Colors for output
+GREEN := \033[0;32m
+YELLOW := \033[1;33m
+RED := \033[0;31m
+NC := \033[0m # No Color
+
+# Default target
+.PHONY: all
+all: homebrew shell nvim tmux
+
+# Help target
+.PHONY: help
+help:
+	@echo "Available targets:"
+	@echo "  all      - Install everything (default)"
+	@echo "  homebrew - Install Homebrew and packages"
+	@echo "  shell    - Setup Zsh and Starship prompt"
+	@echo "  nvim     - Setup Neovim and LSP dependencies"
+	@echo "  tmux     - Setup Tmux and TPM"
+	@echo "  starship - Setup Starship prompt"
+	@echo "  clean    - Remove symlinks and configurations"
+	@echo "  help     - Show this help message"
+
+# Check if command exists
+check-command = $(shell command -v $(1) >/dev/null 2>&1 && echo "yes" || echo "no")
+
+# Check if brew package is installed
+check-brew-package = $(shell brew list --formula $(1) >/dev/null 2>&1 && echo "yes" || echo "no")
+check-brew-cask = $(shell brew list --cask $(1) >/dev/null 2>&1 && echo "yes" || echo "no")
+
+# Install brew package if not installed
+install-brew-package:
+	@if [ "$(call check-brew-package,$(PACKAGE))" = "no" ] && [ "$(call check-brew-cask,$(PACKAGE))" = "no" ]; then \
+		echo "$(YELLOW)Installing $(PACKAGE) as $(TYPE)...$(NC)"; \
+		if [ "$(TYPE)" = "cask" ]; then \
+			brew install --cask $(PACKAGE); \
+		else \
+			brew install $(PACKAGE); \
+		fi; \
+	else \
+		echo "$(GREEN)$(PACKAGE) is already installed$(NC)"; \
+	fi
+
+# Homebrew setup
+.PHONY: homebrew
+homebrew: check-homebrew install-brew-packages
+
+check-homebrew:
+	@if [ "$(call check-command,brew)" = "no" ]; then \
+		echo "$(YELLOW)Installing Homebrew...$(NC)"; \
+		/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
+		echo 'eval "$$(/opt/homebrew/bin/brew shellenv)"' >> $(HOME_DIR)/.zprofile; \
+		eval "$$(/opt/homebrew/bin/brew shellenv)"; \
+	else \
+		echo "$(GREEN)Homebrew is already installed$(NC)"; \
+		echo "$(YELLOW)Updating Homebrew...$(NC)"; \
+		brew update && brew upgrade; \
+	fi
+
+install-brew-packages: check-homebrew
+	@$(MAKE) install-brew-package PACKAGE=ripgrep TYPE=formula
+	@$(MAKE) install-brew-package PACKAGE=n TYPE=formula
+	@$(MAKE) install-brew-package PACKAGE=fd TYPE=formula
+	@$(MAKE) install-brew-package PACKAGE=pnpm TYPE=formula
+	@$(MAKE) install-brew-package PACKAGE=pipx TYPE=formula
+	@$(MAKE) install-brew-package PACKAGE=docker TYPE=cask
+	@$(MAKE) install-brew-package PACKAGE=alacritty TYPE=cask
+	@$(MAKE) install-brew-package PACKAGE=raycast TYPE=cask
+	@$(MAKE) install-brew-package PACKAGE=llvm TYPE=formula
+	@$(MAKE) install-brew-package PACKAGE=zsh TYPE=formula
+	@$(MAKE) install-brew-package PACKAGE=starship TYPE=formula
+	@brew tap homebrew/cask-fonts 2>/dev/null || true
+	@$(MAKE) install-brew-package PACKAGE=font-jetbrains-mono-nerd-font TYPE=cask
+	@brew tap hashicorp/tap 2>/dev/null || true
+	@$(MAKE) install-brew-package PACKAGE=hashicorp/tap/terraform TYPE=formula
+	@brew install awscli 2>/dev/null || echo "$(GREEN)awscli already installed$(NC)"
+
+# Shell setup
+.PHONY: shell
+shell: homebrew setup-zsh-config setup-starship
+
+
+setup-zsh-config:
+	@echo "$(YELLOW)Setting up Zsh configuration...$(NC)"; \
+	ln -sf $(DOTFILES_CONFIG_DIR)/zsh/zshrc $(HOME_DIR)/.zshrc; \
+	ln -sf $(DOTFILES_CONFIG_DIR)/zsh/zprofile $(HOME_DIR)/.zprofile; \
+	echo "$(GREEN)Zsh configuration setup complete$(NC)"
+
+setup-starship:
+	@echo "$(YELLOW)Setting up Starship configuration...$(NC)"; \
+	mkdir -p $(CONFIG_DIR); \
+	ln -sf $(DOTFILES_CONFIG_DIR)/starship/starship.toml $(CONFIG_DIR)/starship.toml; \
+	echo "$(GREEN)Starship configuration setup complete$(NC)"
+
+# Starship setup
+.PHONY: starship
+starship: homebrew setup-starship
+
+# Neovim setup
+.PHONY: nvim
+nvim: homebrew setup-neovim setup-nvim-config setup-lsp-dependencies
+
+setup-neovim:
+	@$(MAKE) install-brew-package PACKAGE=neovim TYPE=formula
+
+setup-nvim-config:
+	@echo "$(YELLOW)Setting up Neovim configuration...$(NC)"; \
+	NVIM_DIR="$(CONFIG_DIR)/nvim"; \
+	mkdir -p "$$NVIM_DIR/.backup" "$$NVIM_DIR/lua/config" "$$NVIM_DIR/lua/plugins"; \
+	ln -sf $(DOTFILES_CONFIG_DIR)/nvim/init.lua "$$NVIM_DIR/init.lua"; \
+	ln -sf $(DOTFILES_CONFIG_DIR)/nvim/lazy-lock.json "$$NVIM_DIR/lazy-lock.json"; \
+	cd $(DOTFILES_CONFIG_DIR)/nvim && find . -type f | while read -r file; do \
+		file="$${file#./}"; \
+		mkdir -p "$$NVIM_DIR/$$(dirname "$$file")"; \
+		ln -sf "$(DOTFILES_CONFIG_DIR)/nvim/$$file" "$$NVIM_DIR/$$file"; \
+	done; \
+	echo "$(GREEN)Neovim configuration setup complete$(NC)"
+
+setup-lsp-dependencies:
+	@echo "$(YELLOW)Setting up LSP dependencies...$(NC)"; \
+	$(MAKE) install-brew-package PACKAGE=llvm TYPE=formula; \
+	$(MAKE) install-brew-package PACKAGE=n TYPE=formula; \
+	n auto; \
+	npm install -g typescript typescript-language-server; \
+	$(MAKE) install-brew-package PACKAGE=pipx TYPE=formula; \
+	pipx install python-lsp-server; \
+	cd $(HOME_DIR)/.local/share/pipx/venvs/python-lsp-server && \
+	source base/activate && \
+	python3 -m pip install pylsp-mypy && \
+	python3 -m pip install python-lsp-ruff --no-deps; \
+	echo "$(GREEN)LSP dependencies setup complete$(NC)"
+
+# Tmux setup
+.PHONY: tmux
+tmux: homebrew setup-tmux setup-tpm setup-tmux-config
+
+setup-tmux:
+	@$(MAKE) install-brew-package PACKAGE=tmux TYPE=formula
+
+setup-tpm:
+	@TPM_DIR="$(HOME_DIR)/.tmux/plugins/tpm"; \
+	if [ ! -d "$$TPM_DIR" ]; then \
+		echo "$(YELLOW)Installing Tmux Plugin Manager...$(NC)"; \
+		git clone https://github.com/tmux-plugins/tpm "$$TPM_DIR"; \
+	else \
+		echo "$(GREEN)TPM is already installed$(NC)"; \
+	fi
+
+setup-tmux-config:
+	@echo "$(YELLOW)Setting up Tmux configuration...$(NC)"; \
+	TMUX_CONFIG_DIR="$(CONFIG_DIR)/tmux"; \
+	mkdir -p "$$TMUX_CONFIG_DIR"; \
+	ln -sf $(DOTFILES_CONFIG_DIR)/tmux/tmux.conf "$$TMUX_CONFIG_DIR/tmux.conf"; \
+	echo "$(GREEN)Tmux configuration setup complete$(NC)"
+
+# Alacritty setup
+.PHONY: alacritty
+alacritty: homebrew setup-alacritty
+
+setup-alacritty:
+	@$(MAKE) install-brew-package PACKAGE=alacritty TYPE=cask; \
+	mkdir -p $(CONFIG_DIR)/alacritty; \
+	ln -sf $(DOTFILES_CONFIG_DIR)/alacritty/alacritty.toml $(CONFIG_DIR)/alacritty/alacritty.toml; \
+	echo "$(GREEN)Alacritty configuration setup complete$(NC)"
+
+# Clean target
+.PHONY: clean
+clean:
+	@echo "$(YELLOW)Cleaning up symlinks and configurations...$(NC)"; \
+	rm -f $(HOME_DIR)/.zshrc $(HOME_DIR)/.zprofile; \
+	rm -rf $(CONFIG_DIR)/nvim $(CONFIG_DIR)/tmux $(CONFIG_DIR)/alacritty; \
+	echo "$(GREEN)Cleanup complete$(NC)"
+
+# Status check
+.PHONY: status
+status:
+	@echo "$(YELLOW)Checking installation status...$(NC)"; \
+	echo "Homebrew: $$([ "$(call check-command,brew)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Zsh: $$([ "$(call check-command,zsh)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Neovim: $$([ "$(call check-command,nvim)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Tmux: $$([ "$(call check-command,tmux)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Alacritty: $$([ "$(call check-brew-cask,alacritty)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Starship: $$([ "$(call check-command,starship)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"
