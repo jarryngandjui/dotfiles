@@ -91,8 +91,121 @@ compdef _dot_completion dot
 # Git
 # ===
 
-# git add -u : updates existing files that are tracked and does not add new ones
-alias gat="ga -u"
+# Git helper functions
+git_main_branch() {
+  command git rev-parse --git-dir &>/dev/null || return
+  local ref
+  for ref in refs/{heads,remotes/{origin,upstream}}/{main,trunk,mainline,default}; do
+    if command git show-ref -q --verify $ref; then
+      echo ${ref:t}
+      return
+    fi
+  done
+  echo master
+}
+
+git_develop_branch() {
+  command git rev-parse --git-dir &>/dev/null || return
+  local ref
+  for ref in refs/{heads,remotes/{origin,upstream}}/{dev,devel,development}; do
+    if command git show-ref -q --verify $ref; then
+      echo ${ref:t}
+      return
+    fi
+  done
+  echo develop
+}
+
+git_current_branch() {
+  command git rev-parse --abbrev-ref HEAD 2>/dev/null
+}
+
+current_branch() {
+  git_current_branch
+}
+
+# Git add aliases
+alias ga="git add"
+alias gat="ga -u"  # git add -u : updates existing files that are tracked and does not add new ones
+
+# Git branch aliases
+alias gb="git branch"
+alias gbd="git branch -d"
+
+# Git checkout aliases
+alias gcm="git checkout $(git_main_branch)"
+alias gcd="git checkout $(git_develop_branch)"
+alias gco="git checkout"
+
+# Git cherry-pick aliases
+alias gcp="git cherry-pick"
+alias gcpa="git cherry-pick --abort"
+alias gcpc="git cherry-pick --continue"
+
+# Git commit aliases
+alias gcmsg="git commit -m"
+
+# Git diff aliases
+alias gd="git diff"
+alias gdca="git diff --cached"
+alias gdup="git diff @{upstream}"
+
+# Git fetch aliases
+alias gf="git fetch"
+alias gfo="git fetch origin"
+
+# Git help aliases
+alias ghh="git help"
+
+# Git merge aliases
+alias gm="git merge"
+alias gma="git merge --abort"
+
+# Git pull aliases
+alias gl="git pull"
+alias glr="git pull --rebase"
+
+# Git push aliases
+alias gp="git push"
+alias gpd="git push --dry-run"
+alias gpf="git push --force"
+alias gpfo="git push --force origin $(current_branch)"
+
+# Git rebase aliases
+alias grb="git rebase"
+alias grba="git rebase --abort"
+alias grbc="git rebase --continue"
+alias grbi="git rebase -i"
+alias grbm="git rebase $(git_main_branch)"
+alias grbmi="git rebase $(git_main_branch) -i"
+alias grbom="git rebase origin/$(git_main_branch)"
+alias grbomi="git rebase origin/$(git_main_branch) -i"
+alias grbs="git rebase --skip"
+
+# Git reset aliases
+alias grh="git reset"
+alias grhh="git reset --hard"
+alias groh="git reset origin/$(git_current_branch) --hard"
+alias gru="git reset --"
+
+# Git rm aliases
+alias grm="git rm"
+alias grmc="git rm --cached"
+
+# Git show aliases
+alias gsh="git show"
+
+# Git stash aliases
+alias gst="git status"
+alias gsta="git stash push"
+alias gstaa="git stash apply"
+alias gstall="git stash --all"
+alias gstc="git stash clear"
+alias gstd="git stash drop"
+alias gstl="git stash list"
+alias gstp="git stash pop"
+alias gsts="git stash show --text"
+alias gstu="git stash --include-untracked"
 
 # Delete a local branch
 function gbdl() {
