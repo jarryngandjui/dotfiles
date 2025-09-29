@@ -204,7 +204,13 @@ setup-tmux-config:
 	TMUX_CONFIG_DIR="$(CONFIG_DIR)/tmux"; \
 	mkdir -p "$$TMUX_CONFIG_DIR"; \
 	ln -sf $(DOTFILES_CONFIG_DIR)/tmux/tmux.conf "$$TMUX_CONFIG_DIR/tmux.conf"; \
+	ln -sf $(DOTFILES_CONFIG_DIR)/tmux/tmux.reset.conf "$$TMUX_CONFIG_DIR/tmux.reset.conf"; \
 	echo "$(GREEN)Tmux configuration setup complete$(NC)"
+
+setup-tmux-reload:
+	@echo "$(YELLOW)Reloading Tmux configuration...$(NC)"
+	@tmux source-file ~/.config/tmux/tmux.conf || echo "$(RED)No active tmux sessions found$(NC)"
+	@echo "$(GREEN)Tmux configuration reloaded$(NC)"
 
 # Alacritty setup
 .PHONY: alacritty

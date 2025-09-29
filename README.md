@@ -79,7 +79,8 @@ make clean
 - **Theme**: Catppuccin with custom status bar and window styling
 - **Plugins**: TPM, sensible defaults, yank, resurrect, continuum, fzf integration
 - **Custom**: Session management, floating windows, URL opening, meeting integration
-- **Keybindings**: Vi mode, custom prefix (Ctrl+A), pane management
+- **Keybindings**: Vi mode, custom prefix (Ctrl+Space), pane management
+- **Tmux-Nvim Integration**: Seamless navigation between tmux panes and nvim splits
 
 ### Starship Prompt
 - **Theme**: Catppuccin Mocha palette
@@ -91,6 +92,58 @@ make clean
 - **Aliases**: Editor shortcuts, navigation, configuration editing
 - **Functions**: Git branch management, dotfiles completion
 - **Environment**: Comprehensive PATH setup, project directories, tool configurations
+
+## Keybindings
+
+### Tmux Multiplexer (Prefix: `Ctrl+Space`)
+
+| Category | Key Combination | Action |
+|----------|----------------|--------|
+| **Pane Management** | `Ctrl+Space` + `\|` | Split window vertically |
+| | `Ctrl+Space` + `v` | Split window vertically (keep current path) |
+| | `Ctrl+Space` + `s` | Split window horizontally (keep current path) |
+| | `Ctrl+Space` + `z` | Toggle zoom on current pane |
+| | `Ctrl+Space` + `c` | Kill current pane |
+| | `Ctrl+Space` + `x` | Swap pane down |
+| **Navigation** | `Ctrl+Space` + `h` | Move to left pane |
+| | `Ctrl+Space` + `j` | Move to bottom pane |
+| | `Ctrl+Space` + `k` | Move to top pane |
+| | `Ctrl+Space` + `l` | Move to right pane |
+| | `Ctrl+Space` + `H` | Move to previous window |
+| | `Ctrl+Space` + `L` | Move to next window |
+| | `Ctrl+Space` + `Ctrl+A` | Go to last window |
+| | `Ctrl+Space` + `"` | Choose window from list |
+| | `Ctrl+Space` + `S` | Choose session |
+| **Resizing** | `Ctrl+Space` + `,` | Resize pane left (20 units) |
+| | `Ctrl+Space` + `.` | Resize pane right (20 units) |
+| | `Ctrl+Space` + `-` | Resize pane down (7 units) |
+| | `Ctrl+Space` + `=` | Resize pane up (7 units) |
+| **Window Management** | `Ctrl+Space` + `Ctrl+C` | Create new window |
+| | `Ctrl+Space` + `r` | Rename current window |
+| | `Ctrl+Space` + `w` | List windows |
+| **Utilities** | `Ctrl+Space` + `R` | Reload tmux config |
+| | `Ctrl+Space` + `K` | Clear screen |
+| | `Ctrl+Space` + `*` | Toggle synchronize panes |
+| | `Ctrl+Space` + `Ctrl+D` | Detach from session |
+
+### Neovim Editor
+
+| Category | Key Combination | Action |
+|----------|----------------|--------|
+| **Tmux Integration** | `Ctrl+h` | Move to left tmux pane/nvim split |
+| | `Ctrl+j` | Move to bottom tmux pane/nvim split |
+| | `Ctrl+k` | Move to top tmux pane/nvim split |
+| | `Ctrl+l` | Move to right tmux pane/nvim split |
+| **General Navigation** | `jk` | Exit insert mode |
+| | `;` | Enter command mode |
+| **Diagnostics** | `[d` | Go to previous diagnostic |
+| | `]d` | Go to next diagnostic |
+| | `<leader>e` | Open floating diagnostic |
+| | `<leader>q` | Open diagnostics list |
+| **Git Integration** | `<leader>gl` | Git log (Flog) |
+| | `<leader>gf` | Git file history |
+| | `<leader>gc` | Git last commit diff |
+| | `<leader>gt` | Toggle git file history |
 
 ## Idempotency
 
