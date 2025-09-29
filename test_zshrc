@@ -1,4 +1,16 @@
+# This is some existing user configuration
+export USER_VAR="test_value"
+alias ll="ls -la"
+
+# Some other user settings
+export EDITOR="vim"
+
+
+# More user configuration after the markers
+export ANOTHER_USER_VAR="another_value"
+alias user_alias="echo user"
 # === DOTFILES ZSH CONFIGURATION START - DO NOT EDIT MANUALLY ===
+echo "DOTFILES CONFIG START - $(date)"
 
 # Environment Variables
 # =====================
@@ -137,4 +149,5 @@ complete -o nospace -C /opt/homebrew/bin/terraform terraform
 # ===============
 eval "$(starship init zsh)"
 
+echo "DOTFILES CONFIG END - $(date)"
 # === DOTFILES ZSH CONFIGURATION END - DO NOT EDIT MANUALLY ===

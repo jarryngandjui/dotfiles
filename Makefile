@@ -28,6 +28,7 @@ help:
 	@echo "  tmux     - Setup Tmux and TPM"
 	@echo "  starship - Setup Starship prompt"
 	@echo "  clean    - Remove symlinks and configurations"
+	@echo "  clean-backups - Remove old zshrc backup files"
 	@echo "  help     - Show this help message"
 
 # Check if command exists
@@ -37,17 +38,25 @@ check-command = $(shell command -v $(1) >/dev/null 2>&1 && echo "yes" || echo "n
 check-brew-package = $(shell brew list --formula $(1) >/dev/null 2>&1 && echo "yes" || echo "no")
 check-brew-cask = $(shell brew list --cask $(1) >/dev/null 2>&1 && echo "yes" || echo "no")
 
+# Check if cask app exists in Applications folder
+check-cask-app = $(shell [ -d "/Applications/$(1).app" ] && echo "yes" || echo "no")
+
 # Install brew package if not installed
 install-brew-package:
-	@if [ "$(call check-brew-package,$(PACKAGE))" = "no" ] && [ "$(call check-brew-cask,$(PACKAGE))" = "no" ]; then \
-		echo "$(YELLOW)Installing $(PACKAGE) as $(TYPE)...$(NC)"; \
-		if [ "$(TYPE)" = "cask" ]; then \
-			brew install --cask $(PACKAGE); \
+	@if [ "$(TYPE)" = "cask" ]; then \
+		if [ "$(call check-brew-cask,$(PACKAGE))" = "yes" ] || [ "$(call check-cask-app,$(PACKAGE))" = "yes" ]; then \
+			echo "$(GREEN)$(PACKAGE) is already installed$(NC)"; \
 		else \
-			brew install $(PACKAGE); \
+			echo "$(YELLOW)Installing $(PACKAGE) as $(TYPE)...$(NC)"; \
+			brew install --cask $(PACKAGE) 2>/dev/null || echo "$(YELLOW)$(PACKAGE) installation failed, but app may already exist in Applications folder$(NC)"; \
 		fi; \
 	else \
-		echo "$(GREEN)$(PACKAGE) is already installed$(NC)"; \
+		if [ "$(call check-brew-package,$(PACKAGE))" = "yes" ]; then \
+			echo "$(GREEN)$(PACKAGE) is already installed$(NC)"; \
+		else \
+			echo "$(YELLOW)Installing $(PACKAGE) as $(TYPE)...$(NC)"; \
+			brew install $(PACKAGE); \
+		fi; \
 	fi
 
 # Homebrew setup
@@ -86,14 +95,39 @@ install-brew-packages: check-homebrew
 
 # Shell setup
 .PHONY: shell
-shell: homebrew setup-zsh-config setup-starship
+shell: homebrew setup-zsh setup-starship
 
 
-setup-zsh-config:
+setup-zsh:
 	@echo "$(YELLOW)Setting up Zsh configuration...$(NC)"; \
-	ln -sf $(DOTFILES_CONFIG_DIR)/zsh/zshrc $(HOME_DIR)/.zshrc; \
+	$(MAKE) setup-zshrc-merge; \
 	ln -sf $(DOTFILES_CONFIG_DIR)/zsh/zprofile $(HOME_DIR)/.zprofile; \
 	echo "$(GREEN)Zsh configuration setup complete$(NC)"
+
+setup-zshrc-merge:
+	@echo "$(YELLOW)Merging zshrc configuration...$(NC)"; \
+	ZSH_CONFIG_START="# === DOTFILES ZSH CONFIGURATION START - DO NOT EDIT MANUALLY ===="; \
+	ZSH_CONFIG_END="# === DOTFILES ZSH CONFIGURATION END - DO NOT EDIT MANUALLY ===="; \
+	BACKUP_FILE="$(HOME_DIR)/.zshrc-backup-$$(date +%Y-%m-%d_%H-%M-%S)"; \
+	if [ -f "$(HOME_DIR)/.zshrc" ]; then \
+		if grep -q "$$ZSH_CONFIG_START" "$(HOME_DIR)/.zshrc" && grep -q "$$ZSH_CONFIG_END" "$(HOME_DIR)/.zshrc"; then \
+			echo "$(GREEN)Existing dotfiles configuration found, updating...$(NC)"; \
+			cp "$(HOME_DIR)/.zshrc" "$$BACKUP_FILE"; \
+			echo "$(YELLOW)Backed up existing zshrc to $$BACKUP_FILE$(NC)"; \
+			awk "/$$ZSH_CONFIG_START/,/$$ZSH_CONFIG_END/ { next } { print }" "$(HOME_DIR)/.zshrc" > "$(HOME_DIR)/.zshrc.tmp"; \
+			cat "$(HOME_DIR)/.zshrc.tmp" $(DOTFILES_CONFIG_DIR)/zsh/zshrc > "$(HOME_DIR)/.zshrc"; \
+			rm "$(HOME_DIR)/.zshrc.tmp"; \
+		else \
+			echo "$(YELLOW)No existing dotfiles configuration found, creating backup and merging...$(NC)"; \
+			cp "$(HOME_DIR)/.zshrc" "$$BACKUP_FILE"; \
+			echo "$(YELLOW)Backed up existing zshrc to $$BACKUP_FILE$(NC)"; \
+			cat "$(HOME_DIR)/.zshrc" $(DOTFILES_CONFIG_DIR)/zsh/zshrc > "$(HOME_DIR)/.zshrc"; \
+		fi; \
+	else \
+		echo "$(YELLOW)No existing zshrc found, creating new one...$(NC)"; \
+		cp $(DOTFILES_CONFIG_DIR)/zsh/zshrc "$(HOME_DIR)/.zshrc"; \
+	fi; \
+	echo "$(GREEN)Zshrc configuration merged successfully$(NC)"
 
 setup-starship:
 	@echo "$(YELLOW)Setting up Starship configuration...$(NC)"; \
@@ -176,9 +210,17 @@ setup-alacritty:
 .PHONY: clean
 clean:
 	@echo "$(YELLOW)Cleaning up symlinks and configurations...$(NC)"; \
-	rm -f $(HOME_DIR)/.zshrc $(HOME_DIR)/.zprofile; \
+	rm -f $(HOME_DIR)/.zprofile; \
 	rm -rf $(CONFIG_DIR)/nvim $(CONFIG_DIR)/tmux $(CONFIG_DIR)/alacritty; \
+	echo "$(YELLOW)Note: .zshrc and backup files are preserved for safety$(NC)"; \
 	echo "$(GREEN)Cleanup complete$(NC)"
+
+# Clean backups target
+.PHONY: clean-backups
+clean-backups:
+	@echo "$(YELLOW)Cleaning up old zshrc backup files...$(NC)"; \
+	rm -f $(HOME_DIR)/.zshrc-backup-*; \
+	echo "$(GREEN)Backup cleanup complete$(NC)"
 
 # Status check
 .PHONY: status
