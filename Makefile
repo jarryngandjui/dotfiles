@@ -108,8 +108,8 @@ setup-zsh:
 
 setup-zshrc-merge:
 	@echo "$(YELLOW)Merging zshrc configuration...$(NC)"; \
-	ZSH_CONFIG_START="# === DOTFILES ZSH CONFIGURATION START - DO NOT EDIT MANUALLY ===="; \
-	ZSH_CONFIG_END="# === DOTFILES ZSH CONFIGURATION END - DO NOT EDIT MANUALLY ===="; \
+	ZSH_CONFIG_START="# === DOTFILES ZSH CONFIGURATION START - DO NOT EDIT MANUALLY ==="; \
+	ZSH_CONFIG_END="# === DOTFILES ZSH CONFIGURATION END - DO NOT EDIT MANUALLY ==="; \
 	BACKUP_FILE="$(HOME_DIR)/.zshrc-backup-$$(date +%Y-%m-%d_%H-%M-%S)"; \
 	if [ -f "$(HOME_DIR)/.zshrc" ]; then \
 		if grep -q "$$ZSH_CONFIG_START" "$(HOME_DIR)/.zshrc" && grep -q "$$ZSH_CONFIG_END" "$(HOME_DIR)/.zshrc"; then \
