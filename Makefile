@@ -29,6 +29,7 @@ help:
 	@echo "  starship - Setup Starship prompt"
 	@echo "  clean    - Remove symlinks and configurations"
 	@echo "  clean-backups - Remove old zshrc backup files"
+	@echo "  verify-zsh-completions - Test if compdef is working"
 	@echo "  help     - Show this help message"
 
 # Check if command exists
@@ -102,6 +103,7 @@ setup-zsh:
 	@echo "$(YELLOW)Setting up Zsh configuration...$(NC)"; \
 	$(MAKE) setup-zshrc-merge; \
 	ln -sf $(DOTFILES_CONFIG_DIR)/zsh/zprofile $(HOME_DIR)/.zprofile; \
+	$(MAKE) verify-zsh-completions; \
 	echo "$(GREEN)Zsh configuration setup complete$(NC)"
 
 setup-zshrc-merge:
@@ -128,6 +130,14 @@ setup-zshrc-merge:
 		cp $(DOTFILES_CONFIG_DIR)/zsh/zshrc "$(HOME_DIR)/.zshrc"; \
 	fi; \
 	echo "$(GREEN)Zshrc configuration merged successfully$(NC)"
+
+verify-zsh-completions:
+	@echo "$(YELLOW)Verifying zsh completions...$(NC)"; \
+	if zsh -c "autoload -Uz compinit && compinit && type compdef >/dev/null 2>&1"; then \
+		echo "$(GREEN)Zsh completions (compdef) are working$(NC)"; \
+	else \
+		echo "$(RED)Warning: Zsh completions may not be working properly$(NC)"; \
+	fi
 
 setup-starship:
 	@echo "$(YELLOW)Setting up Starship configuration...$(NC)"; \
@@ -218,9 +228,9 @@ clean:
 # Clean backups target
 .PHONY: clean-backups
 clean-backups:
-	@echo "$(YELLOW)Cleaning up old zshrc backup files...$(NC)"; \
-	rm -f $(HOME_DIR)/.zshrc-backup-*; \
-	echo "$(GREEN)Backup cleanup complete$(NC)"
+
+# Verify zsh completions target
+.PHONY: verify-zsh-completions
 
 # Status check
 .PHONY: status

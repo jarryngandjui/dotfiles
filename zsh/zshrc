@@ -37,6 +37,11 @@ export ZSHPROFILE=$CONFIG/zsh/zprofile
 # Node version manager directory
 export N_PREFIX=$HOME/n
 
+# Zsh completion system
+# ====================
+autoload -Uz compinit
+compinit
+
 # Aliases
 # =======
 
@@ -62,7 +67,7 @@ alias zshrc="vim $ZSHRC"
 alias zprofile="vim $ZSHPROFILE"
 
 # Dotfiles management
-alias dot="cd $DOTFILES && make"
+alias dot="make -C $DOTFILES"
 
 # Dotfiles autocompletion
 _dot_completion() {
@@ -124,8 +129,6 @@ function gbdrl() {
 # ======================
 # The following lines have been added by Docker Desktop to enable Docker CLI completions.
 fpath=(/Users/maestro/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
 # End of Docker CLI completions
 
 # Terraform completions
