@@ -55,7 +55,7 @@ alias activate='source ./venv/bin/activate'
 
 # Quick navigation
 alias projects="cd $PROJECTS"
-alias secondbrain="cd $NOTES"
+alias brain="cd $NOTES"
 alias dotfiles="cd $DOTFILES"
 
 # Configuration editing
@@ -236,6 +236,52 @@ function gbdrl() {
   gcm
   gp origin --delete "${branch_name}"
   gb -D "${branch_name}"
+}
+
+# Second brain backup function
+function brain-dump() {
+  local original_dir=$(pwd)
+  local backup_dir="$NOTES"
+  local timestamp=$(date '+%Y-%m-%d %H-%M-%S')
+  
+  # Expand the path to handle escaped spaces properly
+  backup_dir=$(eval echo "$backup_dir")
+  
+  # Check if we're in a git repository
+  if [ ! -d "$backup_dir/.git" ]; then
+    echo "Error: $backup_dir is not a git repository"
+    return 1
+  fi
+  
+  # Navigate to the second brain directory
+  cd "$backup_dir" || {
+    echo "Error: Cannot access $backup_dir"
+    return 1
+  }
+  
+  # Check if there are any changes to commit
+  if git diff --quiet && git diff --cached --quiet; then
+    echo "No changes to commit in second brain"
+    cd "$original_dir"
+    return 0
+  fi
+  
+  # Add all changes
+  git add .
+  
+  # Commit with timestamp
+  git commit -m "$timestamp backup"
+  
+  # Push to remote if configured
+  if git remote | grep -q .; then
+    git push
+    echo "Second brain backup completed and pushed to remote"
+  else
+    echo "Second brain backup completed (no remote configured)"
+  fi
+  
+  # Return to original directory
+  cd "$original_dir"
 }
 
 # Docker CLI completions
