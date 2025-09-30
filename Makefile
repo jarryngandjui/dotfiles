@@ -15,7 +15,7 @@ NC := \033[0m # No Color
 
 # Default target
 .PHONY: all
-all: homebrew shell nvim tmux
+all: homebrew shell carapace nvim tmux
 
 # Help target
 .PHONY: help
@@ -24,6 +24,7 @@ help:
 	@echo "  all      - Install everything (default)"
 	@echo "  homebrew - Install Homebrew and packages"
 	@echo "  shell    - Setup Zsh and Starship prompt"
+	@echo "  carapace - Install Carapace shell completions"
 	@echo "  nvim     - Setup Neovim and LSP dependencies"
 	@echo "  tmux     - Setup Tmux and TPM"
 	@echo "  starship - Setup Starship prompt"
@@ -149,6 +150,15 @@ setup-starship:
 .PHONY: starship
 starship: homebrew setup-starship
 
+# Carapace setup
+.PHONY: carapace
+carapace: homebrew setup-carapace
+
+setup-carapace:
+	@echo "$(YELLOW)Setting up Carapace shell completions...$(NC)"; \
+	$(MAKE) install-brew-package PACKAGE=carapace TYPE=formula; \
+	echo "$(GREEN)Carapace setup complete$(NC)"
+
 # Neovim setup
 .PHONY: nvim
 nvim: homebrew setup-neovim setup-nvim-config setup-lsp-dependencies
@@ -235,6 +245,7 @@ clean:
 .PHONY: clean-backups
 clean-backups:
 
+
 # Verify zsh completions target
 .PHONY: verify-zsh-completions
 
@@ -244,6 +255,7 @@ status:
 	@echo "$(YELLOW)Checking installation status...$(NC)"; \
 	echo "Homebrew: $$([ "$(call check-command,brew)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Zsh: $$([ "$(call check-command,zsh)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Carapace: $$([ "$(call check-command,carapace)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Neovim: $$([ "$(call check-command,nvim)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Tmux: $$([ "$(call check-command,tmux)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Alacritty: $$([ "$(call check-brew-cask,alacritty)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \

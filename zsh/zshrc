@@ -37,6 +37,14 @@ export ZSHPROFILE=$CONFIG/zsh/zprofile
 # Node version manager directory
 export N_PREFIX=$HOME/n
 
+# Vi mode
+# =======
+set -o vi
+
+# Auto cd
+# =======
+setopt AUTO_CD
+
 # Zsh completion system
 # ====================
 autoload -Uz compinit
