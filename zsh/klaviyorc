@@ -68,6 +68,7 @@ function dxe-broker() {
   make pip-install
   make services-up
   # Create topics
+  krepo
   pants run python/klaviyo/data_exchange/event_pipeline_orchestrator/server/broker/kafka:create_topics
   echo "Kafka containers should now be running (check Docker Desktop for services-kafka-1)"
 }
