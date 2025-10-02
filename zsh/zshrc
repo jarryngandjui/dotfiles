@@ -41,6 +41,13 @@ export N_PREFIX=$HOME/n
 # =======
 set -o vi
 
+# History substring search
+# ========================
+# Enable history search with up/down arrows based on what's already typed
+source /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+bindkey "$terminfo[cuu1]" history-substring-search-up    # Up arrow
+bindkey "$terminfo[cud1]" history-substring-search-down  # Down arrow
+
 # Auto cd
 # =======
 setopt AUTO_CD
