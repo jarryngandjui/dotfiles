@@ -102,6 +102,7 @@ shell: homebrew setup-zsh setup-starship
 setup-zsh:
 	@echo "$(YELLOW)Setting up Zsh configuration...$(NC)"; \
 	$(MAKE) setup-zshrc-merge; \
+	$(MAKE) setup-klaviyorc-merge; \
 	ln -sf $(DOTFILES_CONFIG_DIR)/zsh/zprofile $(HOME_DIR)/.zprofile; \
 	$(MAKE) verify-zsh-completions; \
 	echo "$(GREEN)Zsh configuration setup complete$(NC)"
@@ -130,6 +131,33 @@ setup-zshrc-merge:
 		cp $(DOTFILES_CONFIG_DIR)/zsh/zshrc "$(HOME_DIR)/.zshrc"; \
 	fi; \
 	echo "$(GREEN)Zshrc configuration merged successfully$(NC)"
+
+setup-klaviyorc-merge:
+	@echo "$(YELLOW)Merging klaviyorc configuration...$(NC)"; \
+	KLAVIYO_CONFIG_START="# === DOTFILES KLAVIYORC CONFIGURATION START - DO NOT EDIT MANUALLY ==="; \
+	KLAVIYO_CONFIG_END="# === DOTFILES KLAVIYORC CONFIGURATION END - DO NOT EDIT MANUALLY ==="; \
+	BACKUP_FILE="$(HOME_DIR)/.zshrc-klaviyo-backup-$$(date +%Y-%m-%d_%H-%M-%S)"; \
+	if [ -f "$(HOME_DIR)/.zshrc" ]; then \
+		if grep -q "$$KLAVIYO_CONFIG_START" "$(HOME_DIR)/.zshrc" && grep -q "$$KLAVIYO_CONFIG_END" "$(HOME_DIR)/.zshrc"; then \
+			echo "$(GREEN)Existing klaviyo configuration found, updating...$(NC)"; \
+			cp "$(HOME_DIR)/.zshrc" "$$BACKUP_FILE"; \
+			echo "$(YELLOW)Backed up existing zshrc to $$BACKUP_FILE$(NC)"; \
+			awk "/$$KLAVIYO_CONFIG_START/,/$$KLAVIYO_CONFIG_END/ { next } { print }" "$(HOME_DIR)/.zshrc" > "$(HOME_DIR)/.zshrc.tmp"; \
+			cat "$(HOME_DIR)/.zshrc.tmp" $(DOTFILES_CONFIG_DIR)/zsh/klaviyorc > "$(HOME_DIR)/.zshrc.tmp2"; \
+			mv "$(HOME_DIR)/.zshrc.tmp2" "$(HOME_DIR)/.zshrc"; \
+			rm "$(HOME_DIR)/.zshrc.tmp"; \
+		else \
+			echo "$(YELLOW)No existing klaviyo configuration found, appending...$(NC)"; \
+			cp "$(HOME_DIR)/.zshrc" "$$BACKUP_FILE"; \
+			echo "$(YELLOW)Backed up existing zshrc to $$BACKUP_FILE$(NC)"; \
+			cat "$(HOME_DIR)/.zshrc" $(DOTFILES_CONFIG_DIR)/zsh/klaviyorc > "$(HOME_DIR)/.zshrc.tmp"; \
+			mv "$(HOME_DIR)/.zshrc.tmp" "$(HOME_DIR)/.zshrc"; \
+		fi; \
+	else \
+		echo "$(RED)Error: No .zshrc file found. Please run setup-zshrc-merge first.$(NC)"; \
+		exit 1; \
+	fi; \
+	echo "$(GREEN)Klaviyo configuration merged successfully$(NC)"
 
 verify-zsh-completions:
 	@echo "$(YELLOW)Verifying zsh completions...$(NC)"; \
