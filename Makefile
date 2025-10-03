@@ -15,7 +15,7 @@ NC := \033[0m # No Color
 
 # Default target
 .PHONY: all
-all: homebrew shell nvim tmux
+all: homebrew shell carapace nvim tmux
 
 # Help target
 .PHONY: help
@@ -23,7 +23,9 @@ help:
 	@echo "Available targets:"
 	@echo "  all      - Install everything (default)"
 	@echo "  homebrew - Install Homebrew and packages"
+	@echo "  node     - Setup Node.js using n version manager"
 	@echo "  shell    - Setup Zsh and Starship prompt"
+	@echo "  carapace - Install Carapace shell completions"
 	@echo "  nvim     - Setup Neovim and LSP dependencies"
 	@echo "  tmux     - Setup Tmux and TPM"
 	@echo "  starship - Setup Starship prompt"
@@ -88,11 +90,30 @@ install-brew-packages: check-homebrew
 	@$(MAKE) install-brew-package PACKAGE=llvm TYPE=formula
 	@$(MAKE) install-brew-package PACKAGE=zsh TYPE=formula
 	@$(MAKE) install-brew-package PACKAGE=starship TYPE=formula
+	@$(MAKE) install-brew-package PACKAGE=zsh-history-substring-search TYPE=formula
 	@brew tap homebrew/cask-fonts 2>/dev/null || true
 	@$(MAKE) install-brew-package PACKAGE=font-jetbrains-mono-nerd-font TYPE=cask
 	@brew tap hashicorp/tap 2>/dev/null || true
 	@$(MAKE) install-brew-package PACKAGE=hashicorp/tap/terraform TYPE=formula
 	@brew install awscli 2>/dev/null || echo "$(GREEN)awscli already installed$(NC)"
+	@$(MAKE) setup-node
+
+# Node.js setup
+.PHONY: setup-node
+setup-node:
+	@echo "$(YELLOW)Setting up Node.js...$(NC)"; \
+	if [ "$(call check-command,node)" = "no" ]; then \
+		echo "$(YELLOW)Installing latest LTS Node.js using n...$(NC)"; \
+		n lts; \
+		echo "$(GREEN)Node.js LTS installed successfully$(NC)"; \
+	else \
+		echo "$(GREEN)Node.js is already installed$(NC)"; \
+		echo "$(YELLOW)Current Node.js version: $$(node --version)$(NC)"; \
+	fi
+
+# Node.js target
+.PHONY: node
+node: homebrew setup-node
 
 # Shell setup
 .PHONY: shell
@@ -176,6 +197,15 @@ setup-starship:
 # Starship setup
 .PHONY: starship
 starship: homebrew setup-starship
+
+# Carapace setup
+.PHONY: carapace
+carapace: homebrew setup-carapace
+
+setup-carapace:
+	@echo "$(YELLOW)Setting up Carapace shell completions...$(NC)"; \
+	$(MAKE) install-brew-package PACKAGE=carapace TYPE=formula; \
+	echo "$(GREEN)Carapace setup complete$(NC)"
 
 # Neovim setup
 .PHONY: nvim
@@ -263,6 +293,7 @@ clean:
 .PHONY: clean-backups
 clean-backups:
 
+
 # Verify zsh completions target
 .PHONY: verify-zsh-completions
 
@@ -271,7 +302,9 @@ clean-backups:
 status:
 	@echo "$(YELLOW)Checking installation status...$(NC)"; \
 	echo "Homebrew: $$([ "$(call check-command,brew)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Node.js: $$([ "$(call check-command,node)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Zsh: $$([ "$(call check-command,zsh)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Carapace: $$([ "$(call check-command,carapace)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Neovim: $$([ "$(call check-command,nvim)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Tmux: $$([ "$(call check-command,tmux)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Alacritty: $$([ "$(call check-brew-cask,alacritty)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
