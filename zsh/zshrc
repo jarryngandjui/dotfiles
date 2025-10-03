@@ -44,9 +44,28 @@ set -o vi
 # History substring search
 # ========================
 # Enable history search with up/down arrows based on what's already typed
-source /opt/homebrew/share/zsh-history-substring-search/zsh-history-substring-search.zsh
-bindkey "$terminfo[cuu1]" history-substring-search-up    # Up arrow
-bindkey "$terminfo[cud1]" history-substring-search-down  # Down arrow
+
+# Configuration variables
+HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=blue,fg=white,bold'
+HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND='bg=red,fg=white,bold'
+HISTORY_SUBSTRING_SEARCH_GLOBBING_FLAGS='i'
+HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE='true'
+HISTORY_SUBSTRING_SEARCH_FUZZY=''
+HISTORY_SUBSTRING_SEARCH_PREFIXED=''
+
+# Load the plugin
+source $(brew --prefix)/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+# Key bindings for emacs mode
+bindkey '^[[A' history-substring-search-up    # Up arrow
+bindkey '^[[B' history-substring-search-down  # Down arrow
+
+# Key bindings for vi mode
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+
+# Additional key bindings for better navigation
+# These provide fallback key bindings for different terminal types
 
 # Auto cd
 # =======
