@@ -23,6 +23,7 @@ export MAINLINE_PYTHON=/Users/jarry.ngandjui/.pyenv/versions/app/bin/python
 export PANTS_CONCURRENT=True 
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
+export PATH=$PATH:$(go env GOPATH)/bin
 
 # Klaviyo CLI
 alias k="klaviyocli"
