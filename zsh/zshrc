@@ -22,6 +22,7 @@ export PATH="/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/app
 # Quick access files and directories
 export PROJECTS=$HOME/Projects
 export DOTFILES=$HOME/dotfiles
+export WEBSITE=$PROJECTS/website
 export NOTES="$HOME/Library/Mobile\ Documents/iCloud~md~obsidian/Documents/Second\ brain"
 export CONFIG=$DOTFILES
 export ALACRITTYCONFIG=$CONFIG/alacritty/alacritty.toml
@@ -91,6 +92,7 @@ alias activate='source ./venv/bin/activate'
 alias projects="cd $PROJECTS"
 alias brain="cd $NOTES"
 alias dotfiles="cd $DOTFILES"
+alias website="cd $WEBSITE"
 
 # Configuration editing
 alias alacrittyconfig="vim $ALACRITTYCONFIG"

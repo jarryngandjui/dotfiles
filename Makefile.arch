@@ -1,0 +1,319 @@
+# Dotfiles Setup Makefile for Arch Linux
+# Idempotent setup for Arch Linux terminal environment
+
+# Variables
+DOTFILES_DIR := $(shell pwd)
+DOTFILES_CONFIG_DIR := $(DOTFILES_DIR)
+HOME_DIR := $(HOME)
+CONFIG_DIR := $(HOME_DIR)/.config
+
+# Check if running in Docker container
+IS_DOCKER := $(shell test -f /.dockerenv && echo "yes" || echo "no")
+
+# Colors for output
+GREEN := \033[0;32m
+YELLOW := \033[1;33m
+RED := \033[0;31m
+NC := \033[0m # No Color
+
+# Default target
+.PHONY: all
+all: pacman shell carapace nvim tmux
+
+# Help target
+.PHONY: help
+help:
+	@echo "Available targets:"
+	@echo "  all      - Install everything (default)"
+	@echo "  pacman   - Install packages using pacman/yay"
+	@echo "  node     - Setup Node.js using n version manager"
+	@echo "  shell    - Setup Zsh and Starship prompt"
+	@echo "  carapace - Install Carapace shell completions"
+	@echo "  nvim     - Setup Neovim and LSP dependencies"
+	@echo "  tmux     - Setup Tmux and TPM"
+	@echo "  starship - Setup Starship prompt"
+	@echo "  alacritty - Setup Alacritty terminal"
+	@echo "  clean    - Remove symlinks and configurations"
+	@echo "  clean-backups - Remove old zshrc backup files"
+	@echo "  verify-zsh-completions - Test if compdef is working"
+	@echo "  help     - Show this help message"
+
+# Check if command exists
+check-command = $(shell command -v $(1) >/dev/null 2>&1 && echo "yes" || echo "no")
+
+# Check if package is installed (pacman)
+check-pacman-package = $(shell pacman -Qi $(1) >/dev/null 2>&1 && echo "yes" || echo "no")
+
+# Check if AUR package is installed (yay)
+check-aur-package = $(shell yay -Qi $(1) >/dev/null 2>&1 && echo "yes" || echo "no")
+
+# Install package if not installed
+.PHONY: install-package
+install-package:
+	@if [ "$(TYPE)" = "aur" ]; then \
+		if [ "$(call check-aur-package,$(PACKAGE))" = "yes" ]; then \
+			echo "$(GREEN)$(PACKAGE) is already installed$(NC)"; \
+		else \
+			echo "$(YELLOW)Installing $(PACKAGE) from AUR...$(NC)"; \
+			yay -S --noconfirm $(PACKAGE); \
+		fi; \
+	else \
+		if [ "$(call check-pacman-package,$(PACKAGE))" = "yes" ]; then \
+			echo "$(GREEN)$(PACKAGE) is already installed$(NC)"; \
+		else \
+			echo "$(YELLOW)Installing $(PACKAGE) from official repos...$(NC)"; \
+			sudo pacman -S --noconfirm $(PACKAGE); \
+		fi; \
+	fi
+
+# Pacman setup
+.PHONY: pacman
+pacman: check-pacman install-packages
+
+check-pacman:
+	@if [ "$(call check-command,pacman)" = "no" ]; then \
+		echo "$(RED)Error: pacman not found. This script requires Arch Linux.$(NC)"; \
+		exit 1; \
+	else \
+		echo "$(GREEN)Pacman is available$(NC)"; \
+		if [ "$(IS_DOCKER)" = "yes" ]; then \
+			echo "$(YELLOW)Running in Docker container, skipping package database update$(NC)"; \
+		else \
+			echo "$(YELLOW)Updating package database...$(NC)"; \
+			sudo pacman -Sy; \
+		fi; \
+	fi
+
+install-packages: check-pacman check-yay
+	@echo "$(YELLOW)Installing official packages...$(NC)"; \
+	for package in ripgrep fd neovim tmux zsh starship alacritty python python-pip nodejs npm git curl wget base-devel clang llvm aws-cli terraform; do \
+		if [ "$(call check-pacman-package,$$package)" = "yes" ]; then \
+			echo "$(GREEN)$$package is already installed$(NC)"; \
+		else \
+			echo "$(YELLOW)Installing $$package from official repos...$(NC)"; \
+			sudo pacman -S --noconfirm $$package; \
+		fi; \
+	done; \
+	echo "$(YELLOW)Installing AUR packages...$(NC)"; \
+	for package in jetbrains-mono-nerd-font carapace-bin n pnpm pipx; do \
+		if [ "$(call check-aur-package,$$package)" = "yes" ]; then \
+			echo "$(GREEN)$$package is already installed$(NC)"; \
+		else \
+			echo "$(YELLOW)Installing $$package from AUR...$(NC)"; \
+			yay -S --noconfirm $$package; \
+		fi; \
+	done; \
+	$(MAKE) setup-node
+
+# Check for yay (AUR helper)
+check-yay:
+	@if [ "$(call check-command,yay)" = "no" ]; then \
+		if [ "$(IS_DOCKER)" = "yes" ]; then \
+			echo "$(YELLOW)Running in Docker container, installing yay AUR helper...$(NC)"; \
+			cd /tmp && \
+			git clone https://aur.archlinux.org/yay.git && \
+			cd yay && \
+			makepkg -si --noconfirm && \
+			cd .. && \
+			rm -rf yay; \
+			echo "$(GREEN)Yay installed successfully$(NC)"; \
+		else \
+			echo "$(YELLOW)Installing yay AUR helper...$(NC)"; \
+			cd /tmp && \
+			git clone https://aur.archlinux.org/yay.git && \
+			cd yay && \
+			makepkg -si --noconfirm && \
+			cd .. && \
+			rm -rf yay; \
+			echo "$(GREEN)Yay installed successfully$(NC)"; \
+		fi; \
+	else \
+		echo "$(GREEN)Yay is already installed$(NC)"; \
+	fi
+
+# Node.js setup
+.PHONY: setup-node
+setup-node:
+	@echo "$(YELLOW)Setting up Node.js...$(NC)"; \
+	if [ "$(call check-command,node)" = "no" ]; then \
+		echo "$(YELLOW)Installing latest LTS Node.js using n...$(NC)"; \
+		n lts; \
+		echo "$(GREEN)Node.js LTS installed successfully$(NC)"; \
+	else \
+		echo "$(GREEN)Node.js is already installed$(NC)"; \
+		echo "$(YELLOW)Current Node.js version: $$(node --version)$(NC)"; \
+	fi
+
+# Node.js target
+.PHONY: node
+node: pacman setup-node
+
+# Shell setup
+.PHONY: shell
+shell: pacman setup-zsh setup-starship
+
+setup-zsh:
+	@echo "$(YELLOW)Setting up Zsh configuration...$(NC)"; \
+	$(MAKE) setup-zshrc-merge; \
+	ln -sf $(DOTFILES_CONFIG_DIR)/zsh/zprofile $(HOME_DIR)/.zprofile; \
+	$(MAKE) verify-zsh-completions; \
+	echo "$(GREEN)Zsh configuration setup complete$(NC)"
+
+setup-zshrc-merge:
+	@echo "$(YELLOW)Merging zshrc configuration...$(NC)"; \
+	ZSH_CONFIG_START="# === DOTFILES ZSH CONFIGURATION START - DO NOT EDIT MANUALLY ==="; \
+	ZSH_CONFIG_END="# === DOTFILES ZSH CONFIGURATION END - DO NOT EDIT MANUALLY ==="; \
+	BACKUP_FILE="$(HOME_DIR)/.zshrc-backup-$$(date +%Y-%m-%d_%H-%M-%S)"; \
+	if [ -f "$(HOME_DIR)/.zshrc" ]; then \
+		if grep -q "$$ZSH_CONFIG_START" "$(HOME_DIR)/.zshrc" && grep -q "$$ZSH_CONFIG_END" "$(HOME_DIR)/.zshrc"; then \
+			echo "$(GREEN)Existing dotfiles configuration found, updating...$(NC)"; \
+			cp "$(HOME_DIR)/.zshrc" "$$BACKUP_FILE"; \
+			echo "$(YELLOW)Backed up existing zshrc to $$BACKUP_FILE$(NC)"; \
+			awk "/$$ZSH_CONFIG_START/,/$$ZSH_CONFIG_END/ { next } { print }" "$(HOME_DIR)/.zshrc" > "$(HOME_DIR)/.zshrc.tmp"; \
+			cat "$(HOME_DIR)/.zshrc.tmp" $(DOTFILES_CONFIG_DIR)/zsh/zshrc > "$(HOME_DIR)/.zshrc"; \
+			rm "$(HOME_DIR)/.zshrc.tmp"; \
+		else \
+			echo "$(YELLOW)No existing dotfiles configuration found, creating backup and merging...$(NC)"; \
+			cp "$(HOME_DIR)/.zshrc" "$$BACKUP_FILE"; \
+			echo "$(YELLOW)Backed up existing zshrc to $$BACKUP_FILE$(NC)"; \
+			cat "$(HOME_DIR)/.zshrc" $(DOTFILES_CONFIG_DIR)/zsh/zshrc > "$(HOME_DIR)/.zshrc"; \
+		fi; \
+	else \
+		echo "$(YELLOW)No existing zshrc found, creating new one...$(NC)"; \
+		cp $(DOTFILES_CONFIG_DIR)/zsh/zshrc "$(HOME_DIR)/.zshrc"; \
+	fi; \
+	echo "$(GREEN)Zshrc configuration merged successfully$(NC)"
+
+verify-zsh-completions:
+	@echo "$(YELLOW)Verifying zsh completions...$(NC)"; \
+	if zsh -c "autoload -Uz compinit && compinit && type compdef >/dev/null 2>&1"; then \
+		echo "$(GREEN)Zsh completions (compdef) are working$(NC)"; \
+	else \
+		echo "$(RED)Warning: Zsh completions may not be working properly$(NC)"; \
+	fi
+
+setup-starship:
+	@echo "$(YELLOW)Setting up Starship configuration...$(NC)"; \
+	mkdir -p $(CONFIG_DIR); \
+	ln -sf $(DOTFILES_CONFIG_DIR)/starship/starship.toml $(CONFIG_DIR)/starship.toml; \
+	echo "$(GREEN)Starship configuration setup complete$(NC)"
+
+# Starship setup
+.PHONY: starship
+starship: pacman setup-starship
+
+# Carapace setup
+.PHONY: carapace
+carapace: pacman setup-carapace
+
+setup-carapace:
+	@echo "$(YELLOW)Setting up Carapace shell completions...$(NC)"; \
+	$(MAKE) install-package PACKAGE=carapace-bin TYPE=aur; \
+	echo "$(GREEN)Carapace setup complete$(NC)"
+
+# Neovim setup
+.PHONY: nvim
+nvim: pacman setup-neovim setup-nvim-config setup-lsp-dependencies
+
+setup-neovim:
+	@$(MAKE) install-package PACKAGE=neovim TYPE=official
+
+setup-nvim-config:
+	@echo "$(YELLOW)Setting up Neovim configuration...$(NC)"; \
+	NVIM_DIR="$(CONFIG_DIR)/nvim"; \
+	mkdir -p "$$NVIM_DIR/.backup" "$$NVIM_DIR/lua/config" "$$NVIM_DIR/lua/plugins"; \
+	ln -sf $(DOTFILES_CONFIG_DIR)/nvim/init.lua "$$NVIM_DIR/init.lua"; \
+	ln -sf $(DOTFILES_CONFIG_DIR)/nvim/lazy-lock.json "$$NVIM_DIR/lazy-lock.json"; \
+	cd $(DOTFILES_CONFIG_DIR)/nvim && find . -type f | while read -r file; do \
+		file="$${file#./}"; \
+		mkdir -p "$$NVIM_DIR/$$(dirname "$$file")"; \
+		ln -sf "$(DOTFILES_CONFIG_DIR)/nvim/$$file" "$$NVIM_DIR/$$file"; \
+	done; \
+	echo "$(GREEN)Neovim configuration setup complete$(NC)"
+
+setup-lsp-dependencies:
+	@echo "$(YELLOW)Setting up LSP dependencies...$(NC)"; \
+	$(MAKE) install-package PACKAGE=clang TYPE=official; \
+	$(MAKE) install-package PACKAGE=llvm TYPE=official; \
+	$(MAKE) install-package PACKAGE=n TYPE=aur; \
+	n auto; \
+	npm install -g typescript typescript-language-server; \
+	$(MAKE) install-package PACKAGE=pipx TYPE=aur; \
+	pipx install python-lsp-server; \
+	cd $(HOME_DIR)/.local/share/pipx/venvs/python-lsp-server && \
+	source base/activate && \
+	python3 -m pip install pylsp-mypy && \
+	python3 -m pip install python-lsp-ruff --no-deps; \
+	echo "$(GREEN)LSP dependencies setup complete$(NC)"
+
+# Tmux setup
+.PHONY: tmux
+tmux: pacman setup-tmux setup-tpm setup-tmux-config
+
+setup-tmux:
+	@$(MAKE) install-package PACKAGE=tmux TYPE=official
+
+setup-tpm:
+	@TPM_DIR="$(HOME_DIR)/.tmux/plugins/tpm"; \
+	if [ ! -d "$$TPM_DIR" ]; then \
+		echo "$(YELLOW)Installing Tmux Plugin Manager...$(NC)"; \
+		git clone https://github.com/tmux-plugins/tpm "$$TPM_DIR"; \
+	else \
+		echo "$(GREEN)TPM is already installed$(NC)"; \
+	fi
+
+setup-tmux-config:
+	@echo "$(YELLOW)Setting up Tmux configuration...$(NC)"; \
+	TMUX_CONFIG_DIR="$(CONFIG_DIR)/tmux"; \
+	mkdir -p "$$TMUX_CONFIG_DIR"; \
+	ln -sf $(DOTFILES_CONFIG_DIR)/tmux/tmux.conf "$$TMUX_CONFIG_DIR/tmux.conf"; \
+	ln -sf $(DOTFILES_CONFIG_DIR)/tmux/tmux.reset.conf "$$TMUX_CONFIG_DIR/tmux.reset.conf"; \
+	echo "$(GREEN)Tmux configuration setup complete$(NC)"
+
+setup-tmux-reload:
+	@echo "$(YELLOW)Reloading Tmux configuration...$(NC)"
+	@tmux source-file ~/.config/tmux/tmux.conf || echo "$(RED)No active tmux sessions found$(NC)"
+	@echo "$(GREEN)Tmux configuration reloaded$(NC)"
+
+# Alacritty setup
+.PHONY: alacritty
+alacritty: pacman setup-alacritty
+
+setup-alacritty:
+	@$(MAKE) install-package PACKAGE=alacritty TYPE=official; \
+	mkdir -p $(CONFIG_DIR)/alacritty; \
+	ln -sf $(DOTFILES_CONFIG_DIR)/alacritty/alacritty.toml $(CONFIG_DIR)/alacritty/alacritty.toml; \
+	echo "$(GREEN)Alacritty configuration setup complete$(NC)"
+
+# Clean target
+.PHONY: clean
+clean:
+	@echo "$(YELLOW)Cleaning up symlinks and configurations...$(NC)"; \
+	rm -f $(HOME_DIR)/.zprofile; \
+	rm -rf $(CONFIG_DIR)/nvim $(CONFIG_DIR)/tmux $(CONFIG_DIR)/alacritty; \
+	echo "$(YELLOW)Note: .zshrc and backup files are preserved for safety$(NC)"; \
+	echo "$(GREEN)Cleanup complete$(NC)"
+
+# Clean backups target
+.PHONY: clean-backups
+clean-backups:
+	@echo "$(YELLOW)Cleaning up zshrc backup files...$(NC)"; \
+	find $(HOME_DIR) -name ".zshrc-backup-*" -type f -delete 2>/dev/null || true; \
+	echo "$(GREEN)Backup cleanup complete$(NC)"
+
+# Verify zsh completions target
+.PHONY: verify-zsh-completions
+
+# Status check
+.PHONY: status
+status:
+	@echo "$(YELLOW)Checking installation status...$(NC)"; \
+	echo "Pacman: $$([ "$(call check-command,pacman)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Yay: $$([ "$(call check-command,yay)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Node.js: $$([ "$(call check-command,node)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Zsh: $$([ "$(call check-command,zsh)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Carapace: $$([ "$(call check-command,carapace)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Neovim: $$([ "$(call check-command,nvim)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Tmux: $$([ "$(call check-command,tmux)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Alacritty: $$([ "$(call check-command,alacritty)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Starship: $$([ "$(call check-command,starship)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"
