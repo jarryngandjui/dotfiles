@@ -87,6 +87,7 @@ install-brew-packages: check-homebrew
 	@$(MAKE) install-brew-package PACKAGE=docker TYPE=cask
 	@$(MAKE) install-brew-package PACKAGE=alacritty TYPE=cask
 	@$(MAKE) install-brew-package PACKAGE=raycast TYPE=cask
+	@$(MAKE) install-brew-package PACKAGE=betterdisplay TYPE=cask
 	@$(MAKE) install-brew-package PACKAGE=llvm TYPE=formula
 	@$(MAKE) install-brew-package PACKAGE=zsh TYPE=formula
 	@$(MAKE) install-brew-package PACKAGE=starship TYPE=formula
