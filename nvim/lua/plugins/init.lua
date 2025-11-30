@@ -55,6 +55,8 @@ return {
           "html", -- HTML LSP
           "rust_analyzer", -- Rust Analyzer
           "pyright",
+          "pylsp",
+          "ruff",
           "tailwindcss", -- Tailwind CSS LSP
           "sqls", -- SQL LSP
           "clangd", -- C/C++ LSP
