@@ -1,11 +1,14 @@
-# Dotfiles Setup Makefile
-# Idempotent setup for macOS terminal environment
+# Dotfiles Setup Makefile for Arch Linux
+# Idempotent setup for Arch Linux terminal environment
 
 # Variables
 DOTFILES_DIR := $(shell pwd)
 DOTFILES_CONFIG_DIR := $(DOTFILES_DIR)
 HOME_DIR := $(HOME)
 CONFIG_DIR := $(HOME_DIR)/.config
+
+# Check if running in Docker container
+IS_DOCKER := $(shell test -f /.dockerenv && echo "yes" || echo "no")
 
 # Colors for output
 GREEN := \033[0;32m
@@ -15,20 +18,21 @@ NC := \033[0m # No Color
 
 # Default target
 .PHONY: all
-all: homebrew shell carapace nvim tmux
+all: pacman shell carapace nvim tmux
 
 # Help target
 .PHONY: help
 help:
 	@echo "Available targets:"
 	@echo "  all      - Install everything (default)"
-	@echo "  homebrew - Install Homebrew and packages"
+	@echo "  pacman   - Install packages using pacman/yay"
 	@echo "  node     - Setup Node.js using n version manager"
 	@echo "  shell    - Setup Zsh and Starship prompt"
 	@echo "  carapace - Install Carapace shell completions"
 	@echo "  nvim     - Setup Neovim and LSP dependencies"
 	@echo "  tmux     - Setup Tmux and TPM"
 	@echo "  starship - Setup Starship prompt"
+	@echo "  alacritty - Setup Alacritty terminal"
 	@echo "  clean    - Remove symlinks and configurations"
 	@echo "  clean-backups - Remove old zshrc backup files"
 	@echo "  verify-zsh-completions - Test if compdef is working"
@@ -37,67 +41,95 @@ help:
 # Check if command exists
 check-command = $(shell command -v $(1) >/dev/null 2>&1 && echo "yes" || echo "no")
 
-# Check if brew package is installed
-check-brew-package = $(shell brew list --formula $(1) >/dev/null 2>&1 && echo "yes" || echo "no")
-check-brew-cask = $(shell brew list --cask $(1) >/dev/null 2>&1 && echo "yes" || echo "no")
+# Check if package is installed (pacman)
+check-pacman-package = $(shell pacman -Qi $(1) >/dev/null 2>&1 && echo "yes" || echo "no")
 
-# Check if cask app exists in Applications folder
-check-cask-app = $(shell [ -d "/Applications/$(1).app" ] && echo "yes" || echo "no")
+# Check if AUR package is installed (yay)
+check-aur-package = $(shell yay -Qi $(1) >/dev/null 2>&1 && echo "yes" || echo "no")
 
-# Install brew package if not installed
-install-brew-package:
-	@if [ "$(TYPE)" = "cask" ]; then \
-		if [ "$(call check-brew-cask,$(PACKAGE))" = "yes" ] || [ "$(call check-cask-app,$(PACKAGE))" = "yes" ]; then \
+# Install package if not installed
+.PHONY: install-package
+install-package:
+	@if [ "$(TYPE)" = "aur" ]; then \
+		if [ "$(call check-aur-package,$(PACKAGE))" = "yes" ]; then \
 			echo "$(GREEN)$(PACKAGE) is already installed$(NC)"; \
 		else \
-			echo "$(YELLOW)Installing $(PACKAGE) as $(TYPE)...$(NC)"; \
-			brew install --cask $(PACKAGE) 2>/dev/null || echo "$(YELLOW)$(PACKAGE) installation failed, but app may already exist in Applications folder$(NC)"; \
+			echo "$(YELLOW)Installing $(PACKAGE) from AUR...$(NC)"; \
+			yay -S --noconfirm $(PACKAGE); \
 		fi; \
 	else \
-		if [ "$(call check-brew-package,$(PACKAGE))" = "yes" ]; then \
+		if [ "$(call check-pacman-package,$(PACKAGE))" = "yes" ]; then \
 			echo "$(GREEN)$(PACKAGE) is already installed$(NC)"; \
 		else \
-			echo "$(YELLOW)Installing $(PACKAGE) as $(TYPE)...$(NC)"; \
-			brew install $(PACKAGE); \
+			echo "$(YELLOW)Installing $(PACKAGE) from official repos...$(NC)"; \
+			sudo pacman -S --noconfirm $(PACKAGE); \
 		fi; \
 	fi
 
-# Homebrew setup
-.PHONY: homebrew
-homebrew: check-homebrew install-brew-packages
+# Pacman setup
+.PHONY: pacman
+pacman: check-pacman install-packages
 
-check-homebrew:
-	@if [ "$(call check-command,brew)" = "no" ]; then \
-		echo "$(YELLOW)Installing Homebrew...$(NC)"; \
-		/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
-		echo 'eval "$$(/opt/homebrew/bin/brew shellenv)"' >> $(HOME_DIR)/.zprofile; \
-		eval "$$(/opt/homebrew/bin/brew shellenv)"; \
+check-pacman:
+	@if [ "$(call check-command,pacman)" = "no" ]; then \
+		echo "$(RED)Error: pacman not found. This script requires Arch Linux.$(NC)"; \
+		exit 1; \
 	else \
-		echo "$(GREEN)Homebrew is already installed$(NC)"; \
-		echo "$(YELLOW)Updating Homebrew...$(NC)"; \
-		brew update && brew upgrade; \
+		echo "$(GREEN)Pacman is available$(NC)"; \
+		if [ "$(IS_DOCKER)" = "yes" ]; then \
+			echo "$(YELLOW)Running in Docker container, skipping package database update$(NC)"; \
+		else \
+			echo "$(YELLOW)Updating package database...$(NC)"; \
+			sudo pacman -Sy; \
+		fi; \
 	fi
 
-install-brew-packages: check-homebrew
-	@$(MAKE) install-brew-package PACKAGE=ripgrep TYPE=formula
-	@$(MAKE) install-brew-package PACKAGE=n TYPE=formula
-	@$(MAKE) install-brew-package PACKAGE=fd TYPE=formula
-	@$(MAKE) install-brew-package PACKAGE=pnpm TYPE=formula
-	@$(MAKE) install-brew-package PACKAGE=pipx TYPE=formula
-	@$(MAKE) install-brew-package PACKAGE=docker TYPE=cask
-	@$(MAKE) install-brew-package PACKAGE=alacritty TYPE=cask
-	@$(MAKE) install-brew-package PACKAGE=raycast TYPE=cask
-	@$(MAKE) install-brew-package PACKAGE=betterdisplay TYPE=cask
-	@$(MAKE) install-brew-package PACKAGE=llvm TYPE=formula
-	@$(MAKE) install-brew-package PACKAGE=zsh TYPE=formula
-	@$(MAKE) install-brew-package PACKAGE=starship TYPE=formula
-	@$(MAKE) install-brew-package PACKAGE=zsh-history-substring-search TYPE=formula
-	@brew tap homebrew/cask-fonts 2>/dev/null || true
-	@$(MAKE) install-brew-package PACKAGE=font-jetbrains-mono-nerd-font TYPE=cask
-	@brew tap hashicorp/tap 2>/dev/null || true
-	@$(MAKE) install-brew-package PACKAGE=hashicorp/tap/terraform TYPE=formula
-	@brew install awscli 2>/dev/null || echo "$(GREEN)awscli already installed$(NC)"
-	@$(MAKE) setup-node
+install-packages: check-pacman check-yay
+	@echo "$(YELLOW)Installing official packages...$(NC)"; \
+	for package in ripgrep fd neovim tmux zsh starship alacritty python python-pip nodejs npm git curl wget base-devel clang llvm aws-cli terraform; do \
+		if [ "$(call check-pacman-package,$$package)" = "yes" ]; then \
+			echo "$(GREEN)$$package is already installed$(NC)"; \
+		else \
+			echo "$(YELLOW)Installing $$package from official repos...$(NC)"; \
+			sudo pacman -S --noconfirm $$package; \
+		fi; \
+	done; \
+	echo "$(YELLOW)Installing AUR packages...$(NC)"; \
+	for package in jetbrains-mono-nerd-font carapace-bin n pnpm pipx; do \
+		if [ "$(call check-aur-package,$$package)" = "yes" ]; then \
+			echo "$(GREEN)$$package is already installed$(NC)"; \
+		else \
+			echo "$(YELLOW)Installing $$package from AUR...$(NC)"; \
+			yay -S --noconfirm $$package; \
+		fi; \
+	done; \
+	$(MAKE) setup-node
+
+# Check for yay (AUR helper)
+check-yay:
+	@if [ "$(call check-command,yay)" = "no" ]; then \
+		if [ "$(IS_DOCKER)" = "yes" ]; then \
+			echo "$(YELLOW)Running in Docker container, installing yay AUR helper...$(NC)"; \
+			cd /tmp && \
+			git clone https://aur.archlinux.org/yay.git && \
+			cd yay && \
+			makepkg -si --noconfirm && \
+			cd .. && \
+			rm -rf yay; \
+			echo "$(GREEN)Yay installed successfully$(NC)"; \
+		else \
+			echo "$(YELLOW)Installing yay AUR helper...$(NC)"; \
+			cd /tmp && \
+			git clone https://aur.archlinux.org/yay.git && \
+			cd yay && \
+			makepkg -si --noconfirm && \
+			cd .. && \
+			rm -rf yay; \
+			echo "$(GREEN)Yay installed successfully$(NC)"; \
+		fi; \
+	else \
+		echo "$(GREEN)Yay is already installed$(NC)"; \
+	fi
 
 # Node.js setup
 .PHONY: setup-node
@@ -114,17 +146,15 @@ setup-node:
 
 # Node.js target
 .PHONY: node
-node: homebrew setup-node
+node: pacman setup-node
 
 # Shell setup
 .PHONY: shell
-shell: homebrew setup-zsh setup-starship
-
+shell: pacman setup-zsh setup-starship
 
 setup-zsh:
 	@echo "$(YELLOW)Setting up Zsh configuration...$(NC)"; \
 	$(MAKE) setup-zshrc-merge; \
-	$(MAKE) setup-klaviyorc-merge; \
 	ln -sf $(DOTFILES_CONFIG_DIR)/zsh/zprofile $(HOME_DIR)/.zprofile; \
 	$(MAKE) verify-zsh-completions; \
 	echo "$(GREEN)Zsh configuration setup complete$(NC)"
@@ -154,33 +184,6 @@ setup-zshrc-merge:
 	fi; \
 	echo "$(GREEN)Zshrc configuration merged successfully$(NC)"
 
-setup-klaviyorc-merge:
-	@echo "$(YELLOW)Merging klaviyorc configuration...$(NC)"; \
-	KLAVIYO_CONFIG_START="# === DOTFILES KLAVIYORC CONFIGURATION START - DO NOT EDIT MANUALLY ==="; \
-	KLAVIYO_CONFIG_END="# === DOTFILES KLAVIYORC CONFIGURATION END - DO NOT EDIT MANUALLY ==="; \
-	BACKUP_FILE="$(HOME_DIR)/.zshrc-klaviyo-backup-$$(date +%Y-%m-%d_%H-%M-%S)"; \
-	if [ -f "$(HOME_DIR)/.zshrc" ]; then \
-		if grep -q "$$KLAVIYO_CONFIG_START" "$(HOME_DIR)/.zshrc" && grep -q "$$KLAVIYO_CONFIG_END" "$(HOME_DIR)/.zshrc"; then \
-			echo "$(GREEN)Existing klaviyo configuration found, updating...$(NC)"; \
-			cp "$(HOME_DIR)/.zshrc" "$$BACKUP_FILE"; \
-			echo "$(YELLOW)Backed up existing zshrc to $$BACKUP_FILE$(NC)"; \
-			awk "/$$KLAVIYO_CONFIG_START/,/$$KLAVIYO_CONFIG_END/ { next } { print }" "$(HOME_DIR)/.zshrc" > "$(HOME_DIR)/.zshrc.tmp"; \
-			cat "$(HOME_DIR)/.zshrc.tmp" $(DOTFILES_CONFIG_DIR)/zsh/klaviyorc > "$(HOME_DIR)/.zshrc.tmp2"; \
-			mv "$(HOME_DIR)/.zshrc.tmp2" "$(HOME_DIR)/.zshrc"; \
-			rm "$(HOME_DIR)/.zshrc.tmp"; \
-		else \
-			echo "$(YELLOW)No existing klaviyo configuration found, appending...$(NC)"; \
-			cp "$(HOME_DIR)/.zshrc" "$$BACKUP_FILE"; \
-			echo "$(YELLOW)Backed up existing zshrc to $$BACKUP_FILE$(NC)"; \
-			cat "$(HOME_DIR)/.zshrc" $(DOTFILES_CONFIG_DIR)/zsh/klaviyorc > "$(HOME_DIR)/.zshrc.tmp"; \
-			mv "$(HOME_DIR)/.zshrc.tmp" "$(HOME_DIR)/.zshrc"; \
-		fi; \
-	else \
-		echo "$(RED)Error: No .zshrc file found. Please run setup-zshrc-merge first.$(NC)"; \
-		exit 1; \
-	fi; \
-	echo "$(GREEN)Klaviyo configuration merged successfully$(NC)"
-
 verify-zsh-completions:
 	@echo "$(YELLOW)Verifying zsh completions...$(NC)"; \
 	if zsh -c "autoload -Uz compinit && compinit && type compdef >/dev/null 2>&1"; then \
@@ -197,23 +200,23 @@ setup-starship:
 
 # Starship setup
 .PHONY: starship
-starship: homebrew setup-starship
+starship: pacman setup-starship
 
 # Carapace setup
 .PHONY: carapace
-carapace: homebrew setup-carapace
+carapace: pacman setup-carapace
 
 setup-carapace:
 	@echo "$(YELLOW)Setting up Carapace shell completions...$(NC)"; \
-	$(MAKE) install-brew-package PACKAGE=carapace TYPE=formula; \
+	$(MAKE) install-package PACKAGE=carapace-bin TYPE=aur; \
 	echo "$(GREEN)Carapace setup complete$(NC)"
 
 # Neovim setup
 .PHONY: nvim
-nvim: homebrew setup-neovim setup-nvim-config setup-lsp-dependencies
+nvim: pacman setup-neovim setup-nvim-config setup-lsp-dependencies
 
 setup-neovim:
-	@$(MAKE) install-brew-package PACKAGE=neovim TYPE=formula
+	@$(MAKE) install-package PACKAGE=neovim TYPE=official
 
 setup-nvim-config:
 	@echo "$(YELLOW)Setting up Neovim configuration...$(NC)"; \
@@ -230,11 +233,12 @@ setup-nvim-config:
 
 setup-lsp-dependencies:
 	@echo "$(YELLOW)Setting up LSP dependencies...$(NC)"; \
-	$(MAKE) install-brew-package PACKAGE=llvm TYPE=formula; \
-	$(MAKE) install-brew-package PACKAGE=n TYPE=formula; \
+	$(MAKE) install-package PACKAGE=clang TYPE=official; \
+	$(MAKE) install-package PACKAGE=llvm TYPE=official; \
+	$(MAKE) install-package PACKAGE=n TYPE=aur; \
 	n auto; \
 	npm install -g typescript typescript-language-server; \
-	$(MAKE) install-brew-package PACKAGE=pipx TYPE=formula; \
+	$(MAKE) install-package PACKAGE=pipx TYPE=aur; \
 	pipx install python-lsp-server; \
 	cd $(HOME_DIR)/.local/share/pipx/venvs/python-lsp-server && \
 	source base/activate && \
@@ -244,10 +248,10 @@ setup-lsp-dependencies:
 
 # Tmux setup
 .PHONY: tmux
-tmux: homebrew setup-tmux setup-tpm setup-tmux-config
+tmux: pacman setup-tmux setup-tpm setup-tmux-config
 
 setup-tmux:
-	@$(MAKE) install-brew-package PACKAGE=tmux TYPE=formula
+	@$(MAKE) install-package PACKAGE=tmux TYPE=official
 
 setup-tpm:
 	@TPM_DIR="$(HOME_DIR)/.tmux/plugins/tpm"; \
@@ -273,10 +277,10 @@ setup-tmux-reload:
 
 # Alacritty setup
 .PHONY: alacritty
-alacritty: homebrew setup-alacritty
+alacritty: pacman setup-alacritty
 
 setup-alacritty:
-	@$(MAKE) install-brew-package PACKAGE=alacritty TYPE=cask; \
+	@$(MAKE) install-package PACKAGE=alacritty TYPE=official; \
 	mkdir -p $(CONFIG_DIR)/alacritty; \
 	ln -sf $(DOTFILES_CONFIG_DIR)/alacritty/alacritty.toml $(CONFIG_DIR)/alacritty/alacritty.toml; \
 	echo "$(GREEN)Alacritty configuration setup complete$(NC)"
@@ -293,7 +297,9 @@ clean:
 # Clean backups target
 .PHONY: clean-backups
 clean-backups:
-
+	@echo "$(YELLOW)Cleaning up zshrc backup files...$(NC)"; \
+	find $(HOME_DIR) -name ".zshrc-backup-*" -type f -delete 2>/dev/null || true; \
+	echo "$(GREEN)Backup cleanup complete$(NC)"
 
 # Verify zsh completions target
 .PHONY: verify-zsh-completions
@@ -302,11 +308,12 @@ clean-backups:
 .PHONY: status
 status:
 	@echo "$(YELLOW)Checking installation status...$(NC)"; \
-	echo "Homebrew: $$([ "$(call check-command,brew)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Pacman: $$([ "$(call check-command,pacman)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Yay: $$([ "$(call check-command,yay)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Node.js: $$([ "$(call check-command,node)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Zsh: $$([ "$(call check-command,zsh)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Carapace: $$([ "$(call check-command,carapace)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Neovim: $$([ "$(call check-command,nvim)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Tmux: $$([ "$(call check-command,tmux)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
-	echo "Alacritty: $$([ "$(call check-brew-cask,alacritty)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Alacritty: $$([ "$(call check-command,alacritty)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Starship: $$([ "$(call check-command,starship)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"

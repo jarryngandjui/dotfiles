@@ -91,6 +91,7 @@ alias activate='source ./venv/bin/activate'
 alias projects="cd $PROJECTS"
 alias brain="cd $NOTES"
 alias dotfiles="cd $DOTFILES"
+alias website="cd $WEBSITE"
 
 # Configuration editing
 alias alacrittyconfig="vim $ALACRITTYCONFIG"
@@ -204,6 +205,7 @@ alias gp="git push"
 alias gpd="git push --dry-run"
 alias gpf="git push --force"
 alias gpfo="git push --force origin $(current_branch)"
+alias gpsup='git push --set-upstream origin $(git_current_branch)'
 
 # Git rebase aliases
 alias grb="git rebase"

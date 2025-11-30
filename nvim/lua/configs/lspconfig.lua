@@ -1,24 +1,7 @@
-local lspconfig = require "lspconfig"
-
 local nvlsp = require "nvchad.configs.lspconfig"
 
 
-lspconfig.clangd.setup {
-  cmd = { "/opt/homebrew/opt/llvm/bin/clangd" },
-  on_attach = nvlsp.on_attach,
-  on_init = nvlsp.on_init,
-  capabilities = nvlsp.capabilities,
-  filetypes = { "cpp", "cc", "h", "hpp" },
-  init_options = {
-    fallbackFlags = {
-      "-std=c++17",
-      "-I/opt/homebrew/include",
-      "-L/opt/homebrew/lib",
-    },
-  },
-}
-
-lspconfig.gopls.setup {
+vim.lsp.config("gopls", {
   on_attach = nvlsp.on_attach,
   on_init = nvlsp.on_init,
   capabilities = nvlsp.capabilities,
@@ -27,16 +10,16 @@ lspconfig.gopls.setup {
       gofumpt = true, -- Aktifkan gofumpt sebagai formatter
     },
   },
-}
+})
 
-lspconfig.emmet_ls.setup {
+vim.lsp.config("emmet_ls", {
   on_attach = nvlsp.on_attach,
   on_init = nvlsp.on_init,
   capabilities = nvlsp.capabilities,
   filetypes = { "html", "css", "javascriptreact", "typescriptreact", "javascript", "typescript" },
-}
+})
 
-lspconfig.ts_ls.setup {
+vim.lsp.config("ts_ls", {
   cmd = { "typescript-language-server", "--stdio" },
   on_attach = function(client, bufnr)
     nvlsp.on_attach(client, bufnr)
@@ -49,9 +32,9 @@ lspconfig.ts_ls.setup {
   end,
   capabilities = nvlsp.capabilities,
   filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
-}
+})
 
-lspconfig.rust_analyzer.setup {
+vim.lsp.config("rust_analyzer", {
   on_attach = nvlsp.on_attach,
   on_init = nvlsp.on_init,
   capabilities = nvlsp.capabilities,
@@ -72,9 +55,9 @@ lspconfig.rust_analyzer.setup {
       },
     },
   },
-}
+})
 
-lspconfig.pyright.setup {
+vim.lsp.config("pyright", {
   on_attach = function(client, bufnr)
     nvlsp.on_attach(client, bufnr)
     local opts = { noremap = true, silent = true }
@@ -94,9 +77,9 @@ lspconfig.pyright.setup {
       },
     },
   },
-}
+})
 
-lspconfig.pylsp.setup {
+vim.lsp.config("pylsp", {
   on_attach = nvlsp.on_attach,
   on_init = nvlsp.on_init,
   capabilities = nvlsp.capabilities,
@@ -113,5 +96,5 @@ lspconfig.pylsp.setup {
       filetypes = { "python" },
     },
   },
-}
+})
 
