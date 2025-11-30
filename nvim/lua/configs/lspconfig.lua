@@ -1,21 +1,6 @@
 local nvlsp = require "nvchad.configs.lspconfig"
 
 
-vim.lsp.config("clangd", {
-  cmd = { "/opt/homebrew/opt/llvm/bin/clangd" },
-  on_attach = nvlsp.on_attach,
-  on_init = nvlsp.on_init,
-  capabilities = nvlsp.capabilities,
-  filetypes = { "cpp", "cc", "h", "hpp" },
-  init_options = {
-    fallbackFlags = {
-      "-std=c++17",
-      "-I/opt/homebrew/include",
-      "-L/opt/homebrew/lib",
-    },
-  },
-})
-
 vim.lsp.config("gopls", {
   on_attach = nvlsp.on_attach,
   on_init = nvlsp.on_init,

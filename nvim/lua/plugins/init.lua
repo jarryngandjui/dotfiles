@@ -48,7 +48,8 @@ return {
       },
       automatic_enable = {
         "pyright",
-        "ts_ls"
+        "pylsp",
+        "ruff",
       },
       config = function()
         local servers = {
@@ -59,7 +60,6 @@ return {
           "ruff",
           "tailwindcss", -- Tailwind CSS LSP
           "sqls", -- SQL LSP
-          "clangd", -- C/C++ LSP
           "eslint", -- ESLint LSP
           "nextls", -- Next.js LSP
           "jsonls", -- JSON LSP
