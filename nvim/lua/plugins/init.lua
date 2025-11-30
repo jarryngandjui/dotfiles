@@ -10,48 +10,27 @@ return {
   },
 
   {
-    "lervag/vimtex",
-    ft = { "tex" },
-    lazy = false, -- we don't want to lazy load VimTeX
-    init = function()
-      -- Use latexmk for compilation and set the output directory to "build"
-      vim.g.vimtex_compiler_method = "latexmk"
-      vim.g.vimtex_compiler_latexmk = {
-        build_dir = "build", -- output directory
-        aux_dir = "build", -- auxiliary files directory
-        options = {
-          "-pdf", -- compile to PDF
-          -- "-interaction=nonstopmode", -- nonstop interaction mode
-          "-synctex=1", -- enable synctex for better forward/backward search
-          "-shell-escape", -- allow shell escapes if needed
-          "-bibtex",
-          "-output-format=pdf",
-          "-noemulate-aux-dir",
-        },
-      }
-      vim.g.vimtex_view_method = "zathura"
-
-      -- vim.g.vimtex_view_general_viewer = "zathura"
-      -- vim.g.vimtex_view_general_options = "--unique file:@pdf\\#src:@line@tex"
-    end,
-  },
-
-  {
     "stevearc/conform.nvim",
     -- event = 'BufWritePre', -- uncomment for format on save
     opts = require "configs.conform",
   },
 
-  -- Full signature help, docs and completion
+  -- Full signature help, docs and completion on lua files
   {
-    "folke/neodev.nvim",
+    "folke/lazydev.nvim",
+    ft = "lua", -- only load on lua files
     event = {
       "BufReadPre",
       "BufNewFile",
     },
-    opts = {},
+    opts = {
+      library = {
+       { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+      },
+    },
   },
 
+  -- a collection of LSP server configurations for the Nvim LSP client
   {
     "neovim/nvim-lspconfig",
     config = function()
@@ -65,6 +44,11 @@ return {
       dependencies = {
         "williamboman/mason.nvim",
         "neovim/nvim-lspconfig",
+        { "mason-org/mason.nvim", opts = {}},
+      },
+      automatic_enable = {
+        "pyright",
+        "ts_ls"
       },
       config = function()
         local servers = {
@@ -108,6 +92,7 @@ return {
       end,
   },
 
+  -- basic highlighting for any language syntax tree parser
   {
     "nvim-treesitter/nvim-treesitter",
     opts = {
@@ -124,34 +109,14 @@ return {
     },
   },
 
-  {
-    "jose-elias-alvarez/null-ls.nvim",
-    config = function()
-      require "../custom/null-ls.lua"
-    end,
-  },
-
-  {
-    -- snippet plugin
-    "L3MON4D3/LuaSnip",
-    dependencies = "rafamadriz/friendly-snippets",
-    opts = { history = true, updateevents = "TextChanged,TextChangedI" },
-    config = function(_, opts)
-      require("custom.luasnip").luasnip(opts)
-    end,
-  },
-
-  -- Single tabpage interface for easily cycling through diffs
+  -- Git Fugitive is the premier Vim plugin for Git
   { "tpope/vim-fugitive" },
 
+  -- Git branch viewer for Vim/Neovim
   { "rbong/vim-flog", dependencies = {
     "tpope/vim-fugitive",
   }, lazy = false },
 
+  -- Git diff side by side DiffviewFileHistory
   { "sindrets/diffview.nvim", lazy = false },
-
-  {
-    "kevinhwang91/nvim-bqf",
-    lazy = false,
-  },
 }
