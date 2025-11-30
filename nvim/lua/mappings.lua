@@ -18,9 +18,3 @@ map("n", "<leader>gl", ":Flog<CR>", { desc = "Git Log" })
 map("n", "<leader>gho", ":DiffviewFileHistory<CR>", { desc = "Git File History" })
 map("n", "<leader>ghc", ":DiffviewClose<CR>", { desc = "Close the current diffview" })
 map("n", "<leader>gc", ":DiffviewOpen HEAD~1<CR>", { desc = "Git Last Commit" })
-
--- Tmux navigator
-map("n", "<C-l>", "<cmd>:TmuxNavigateRight<cr>", { desc = "Tmux Right" })
-map("n", "<C-h>", "<cmd>:TmuxNavigateLeft<cr>", { desc = "Tmux Left" })
-map("n", "<C-k>", "<cmd>:TmuxNavigateUp<cr>", { desc = "Tmux Up" })
-map("n", "<C-j>", "<cmd>:TmuxNavigateDown<cr>", { desc = "Tmux Down" })
