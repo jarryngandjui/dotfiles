@@ -12,6 +12,9 @@ local options = {
     date_format = "%Y-%m-%d-%a",
     time_format = "%H:%M",
   },
+  attachments = {
+    img_folder = "7.\\ Files",  -- default folder to save images
+  }
 }
 
 return options

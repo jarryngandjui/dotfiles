@@ -18,3 +18,10 @@ map("n", "<leader>gl", ":Flog<CR>", { desc = "Git Log" })
 map("n", "<leader>gho", ":DiffviewFileHistory<CR>", { desc = "Git File History" })
 map("n", "<leader>ghc", ":DiffviewClose<CR>", { desc = "Close the current diffview" })
 map("n", "<leader>gc", ":DiffviewOpen HEAD~1<CR>", { desc = "Git Last Commit" })
+
+-- Obsidian
+-- map("n", "<leader>obi", ":ObsidianPasteImg", { desc = "Obsidian paste image from clipboard" }) -- pasting images needs work
+map("n", "<leader>obl", ":ObsidianBacklinks<CR>", { desc = "Obsidian references to the current buffer" })
+map("n", "<leader>obo", ":ObsidianTOC<CR>", { desc = "Obsidian outline" })
+map("n", "<leader>obs", ":ObsidianSearch<CR>", { desc = "Obsidian search with ripgrep" })
+map("n", "<leader>obt", ":ObsidianTemplate<CR>", { desc = "Obsidian insert template" })
