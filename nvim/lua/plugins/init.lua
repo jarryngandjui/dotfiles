@@ -16,6 +16,13 @@ return {
     "ThePrimeagen/vim-be-good",
   },
 
+  -- bookmark project files
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" }
+  },
+
   {
     "stevearc/conform.nvim",
     -- event = 'BufWritePre', -- uncomment for format on save
