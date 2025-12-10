@@ -54,3 +54,4 @@ map("n", "<leader>hp9", function() harpoon:list():select(9) end, { desc = "Harpo
 -- Toggle previous & next buffers
 map("n", "<leader>hpp", function() harpoon:list():prev() end, { desc = "Harpoon: Previous file in list" })
 map("n", "<leader>hpn", function() harpoon:list():next() end, { desc = "Harpoon: Next file in list" })
+

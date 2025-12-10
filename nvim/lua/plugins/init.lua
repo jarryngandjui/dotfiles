@@ -1,16 +1,6 @@
 local config_root = vim.fn.stdpath('config')
 
 return {
-  -- Import custom plugigns
-  {
-    'custom.git', 
-    dir = config_root .. '/lua',
-    lazy = false, 
-    config = function()
-        require('custom.git').setup()
-    end
-  },  
-
   -- Improve vim skills by playing games
   {
     "ThePrimeagen/vim-be-good",
@@ -134,7 +124,7 @@ return {
   {
     "epwalsh/obsidian.nvim",
     version = "*",  -- recommended, use latest release instead of latest commit
-    lazy = true,
+    lazy = false,
     ft = "markdown",
     -- Replace the above line with this if you only want to load obsidian.nvim for markdown files in your vault:
     -- event = {
@@ -148,6 +138,13 @@ return {
       "nvim-lua/plenary.nvim",
     },
     opts = require "configs.obsidian",
+    config = function(_, opts)
+        require('obsidian').setup(opts)
+        
+        -- setup custom plugin
+        local obsidian_client = require('obsidian').get_client()
+        require('custom.secondbrain').setup(obsidian_client, opts) 
+    end
   },
 
   {
@@ -168,5 +165,18 @@ return {
       })
     end
   },
+
+  ---- block for all custom modules managed by custom/init.lua
+  {
+    'custom', 
+    dir = config_root .. '/lua',
+    lazy = false, 
+    dependencies = {
+        "epwalsh/obsidian.nvim"
+    },
+    config = function()
+        require('custom').setup()
+    end
+  },  
 }
 
