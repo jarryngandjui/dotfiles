@@ -140,10 +140,6 @@ return {
     opts = require "configs.obsidian",
     config = function(_, opts)
         require('obsidian').setup(opts)
-        
-        -- setup custom plugin
-        local obsidian_client = require('obsidian').get_client()
-        require('custom.secondbrain').setup(obsidian_client, opts) 
     end
   },
 
@@ -171,9 +167,6 @@ return {
     'custom', 
     dir = config_root .. '/lua',
     lazy = false, 
-    dependencies = {
-        "epwalsh/obsidian.nvim"
-    },
     config = function()
         require('custom').setup()
     end
