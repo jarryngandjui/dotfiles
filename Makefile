@@ -29,6 +29,7 @@ help:
 	@echo "  nvim     - Setup Neovim and LSP dependencies"
 	@echo "  tmux     - Setup Tmux and TPM"
 	@echo "  starship - Setup Starship prompt"
+	@echo "  claude   - Symlink ~/.claude from dotfiles"
 	@echo "  clean    - Remove symlinks and configurations"
 	@echo "  clean-backups - Remove old zshrc backup files"
 	@echo "  verify-zsh-completions - Test if compdef is working"
@@ -87,6 +88,7 @@ install-brew-packages: check-homebrew
 	@$(MAKE) install-brew-package PACKAGE=alacritty TYPE=cask
 	@$(MAKE) install-brew-package PACKAGE=raycast TYPE=cask
 	@$(MAKE) install-brew-package PACKAGE=betterdisplay TYPE=cask
+	@$(MAKE) install-brew-package PACKAGE=claude-code TYPE=cask
 	@$(MAKE) install-brew-package PACKAGE=llvm TYPE=formula
 	@$(MAKE) install-brew-package PACKAGE=zsh TYPE=formula
 	@$(MAKE) install-brew-package PACKAGE=starship TYPE=formula
@@ -118,7 +120,7 @@ node: homebrew setup-node
 
 # Shell setup
 .PHONY: shell
-shell: homebrew setup-zsh setup-starship
+shell: homebrew setup-zsh setup-starship setup-claude
 
 
 setup-zsh:
@@ -167,9 +169,23 @@ setup-starship:
 	ln -sf $(DOTFILES_CONFIG_DIR)/starship/starship.toml $(CONFIG_DIR)/starship.toml; \
 	echo "$(GREEN)Starship configuration setup complete$(NC)"
 
+.PHONY: setup-claude
+setup-claude:
+	@echo "$(YELLOW)Setting up Claude Code ~/.claude symlink...$(NC)"; \
+	if [ -e "$(HOME_DIR)/.claude" ] && [ ! -L "$(HOME_DIR)/.claude" ] && [ -d "$(HOME_DIR)/.claude" ]; then \
+		echo "$(YELLOW)Skipping: ~/.claude is a directory; rename or merge it before using the dotfiles symlink.$(NC)"; \
+	else \
+		ln -sf $(DOTFILES_CONFIG_DIR)/.claude $(HOME_DIR)/.claude; \
+		echo "$(GREEN)~/.claude -> $(DOTFILES_CONFIG_DIR)/.claude$(NC)"; \
+	fi
+
 # Starship setup
 .PHONY: starship
 starship: homebrew setup-starship
+
+# Claude Code dotfiles symlink
+.PHONY: claude
+claude: setup-claude
 
 # Carapace setup
 .PHONY: carapace
@@ -263,7 +279,7 @@ setup-alacritty:
 .PHONY: clean
 clean:
 	@echo "$(YELLOW)Cleaning up symlinks and configurations...$(NC)"; \
-	rm -f $(HOME_DIR)/.zprofile; \
+	rm -f $(HOME_DIR)/.zprofile $(HOME_DIR)/.claude; \
 	rm -rf $(CONFIG_DIR)/nvim $(CONFIG_DIR)/tmux $(CONFIG_DIR)/alacritty; \
 	echo "$(YELLOW)Note: .zshrc and backup files are preserved for safety$(NC)"; \
 	echo "$(GREEN)Cleanup complete$(NC)"
@@ -287,4 +303,6 @@ status:
 	echo "Neovim: $$([ "$(call check-command,nvim)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Tmux: $$([ "$(call check-command,tmux)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Alacritty: $$([ "$(call check-brew-cask,alacritty)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Claude Code: $$([ "$(call check-brew-cask,claude-code)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "~/.claude symlink: $$([ -L "$(HOME_DIR)/.claude" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Starship: $$([ "$(call check-command,starship)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"
