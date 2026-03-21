@@ -1,124 +1,195 @@
-# Executive Summary  
-This report surveys leading AI-driven UX/UI design prompts from top designers, repositories, and communities. We identify and quote exemplar prompts for building websites (from sources like Taskade, blogs, and design galleries), then organize them by design purpose (layout, color/style, accessibility, content, interaction). We rank prompt sources by community engagement (e.g. user counts, stars) and explain the metrics. Common phrasing patterns (e.g. “Create a [style] [component]” or “Ensure [quality] and [feature]”) are extracted. Finally, we offer **10 ready-to-use prompt templates** (annotated with usage tips) and compare sources in a summary table.  A bar chart visualizes top sources by engagement and a flowchart outlines the prompt-to-design workflow.
+# UI/Competitor Research Skill
 
-## Top UX/UI Design Prompts (with Sources)  
-- **“Create a clean website layout for a tech startup. Include a hero section, navigation bar, video section, social proof, pricing section, and contact page. Use soft colors, white space, and a modern color palette. Generate HTML code and explain the structure.”【36†L117-L120】** – A concise prompt guiding layout, style, and coding for a startup site.  
-- **“Create a landing page for a productivity app. Include a hero section with a primary cta button, feature list, video demo, social proof section, and pricing section. Use dark mode design and modern color palette.”【36†L140-L144】** – Focuses on conversion elements and dark-mode style for a product.  
-- **“Create a minimal personal blog website with a cream background, soft colors, blog post grid, author section, and navigation bar. Generate HTML code and suggest images.”【36†L161-L165】** – Specifies content layout and aesthetic for a blog.  
-- **“Create a figma design for a modern marketing website. Use soft colors, balanced white space, and a clean layout. Include hero section, video section, feature grid, and social proof.”【36†L181-L185】** – Emphasizes visual style and key sections for a marketing site.  
-- **“Generate code for a contact page with form validation using a modern programming language. Include name field, email field, message box, and submit button.”【36†L197-L201】** – Directs the AI to produce functional code for a contact form.  
-- **“Design a clear and user-friendly navigation for our website [Website Name] to enhance the user experience. Begin by assessing the website’s content and structure. Create an intuitive navigation menu that organizes content logically and prioritizes key pages or sections. Specify menu labels, drop-down menus if applicable, and any additional navigation elements such as search bars or breadcrumbs. Ensure that the navigation is responsive and accessible across devices. Provide a wireframe or visual representation of the proposed navigation for review and implementation.”【42†L42-L49】** – Comprehensive prompt for crafting site navigation, stressing logic, responsiveness, and accessibility.  
-- **“Create an AI prompt for designing a website footer that effectively includes essential elements like contact information, social media links, quick navigation to key sections, and a brief about the company. Ensure the design is aesthetically pleasing, mobile-responsive, and matches the website’s overall style while maintaining simplicity for easy user interaction.”【14†L83-L90】** – A meta-prompt from Taskade, exemplifying how to specify common footer features and style.  
-- **“Create a mobile-responsive website layout for an e-commerce fashion retailer. Ensure the design prioritizes intuitive navigation, fast loading times, and optimized images for mobile devices. Include user-friendly menus, a seamless checkout process, and prominent call-to-action buttons. Incorporate a clean, modern aesthetic that enhances the shopping experience on smartphones and tablets. Use scalable code to guarantee compatibility across various screen sizes.”【54†L81-L89】** – Directs attention to mobile performance, shopping workflow, and responsive design for an online store.  
+**Short Description:** An AI-guided skill for comprehensive UI pattern and competitor research. This SKILL runs multi-persona analysis to gather UI design patterns, audit competitor interfaces, extract prompt templates, and ideate unique implementations. It outputs actionable insights, prototypes, and test plans.
 
-These prompts (full quotes above) illustrate how designers describe layouts, elements, styles, and functionality in clear, friendly language (e.g. “modern color palette”, “user-friendly menus”, “clean aesthetic”【36†L117-L120】【54†L81-L89】).
+## Executive Summary  
+This skill orchestrates a collaborative, multi-step AI workflow to research UI designs and competitor interfaces. It combines UX research, competitor audit, design pattern extraction, and prompt mining to fuel innovative UI experimentation. Each persona (UX researcher, UX/UI designer, content strategist, accessibility expert, front-end dev, product manager) plays a defined role in tasks from discovery to prototyping. The skill provides structured steps, best-practice checks, prompt templates, and guidance for validating ideas. Outputs include competitor analysis docs, pattern libraries, design briefs, prototypes, and metrics for A/B testing. 
 
-## Prompt Categories by Purpose  
-- **Layout & Structure:** Prompts that define page sections and layout. E.g. the “hero section, navigation bar, video section, … pricing section” sequence in the startup layout prompt【36†L117-L120】, or the blog grid and author section layout【36†L161-L165】. These ensure logical structure.  
-- **Color and Style:** Prompts specifying visual aesthetics. Many use adjectives: “soft colors, white space, modern color palette”【36†L117-L120】; “dark mode design and modern color palette”【36†L140-L144】; “clean, modern aesthetic”【54†L81-L89】. They often mention mood (e.g. minimalist, editorial) or tool references (e.g. “inspired by coolors.co”【40†L160-L163】).  
-- **Accessibility and Responsiveness:** Prompts explicitly requiring inclusive design. For example, navigation and footer prompts stress “mobile-responsive” and “accessible across devices”【42†L42-L49】【14†L83-L90】. They mention contrast, keyboard navigation, or screen-reader compliance (seen in some AI prompt libraries).  
-- **Content & Copy (Microcopy):** Prompts that guide writing text and microcopy. The above contact-page prompt focuses on fields and labels【36†L197-L201】, while others (not quoted) might prompt writing CTAs or body text. Good prompts often ask for “explain structure” or “suggest images”, indicating content generation.  
-- **Interaction & Motion:** Prompts covering dynamic elements. While few prompts explicitly mention animations, some templates (like header design) require hover and dropdown behavior【46†L49-L58】. Designers may add “smooth animation” or “subtle transitions” for interactive polish.  
-- **Onboarding & Flows:** Though less common explicitly, some prompts allude to user flows (e.g. “checkout process” in the e-commerce prompt【54†L83-L89】). Templates can include onboarding screens, tutorials, or progressive disclosure steps to guide users gradually.
+## Purpose & Scope  
+This skill covers **UI/UX research and competitive analysis** for any web or mobile interface. It can be used to analyze corporate dashboards, e-commerce sites, mobile apps, etc. Outputs include annotated competitor audit reports, UI pattern tables, research briefs, design prompts, Figma prototypes, and experiment plans. Constraints: *unspecified defaults* (industry, platform, and tech stack are open unless provided). Use it to push design frontiers by turning competitor insights into novel UI concepts.
 
-Each prompt tends to combine multiple aspects (layout + style + functionality). In practice, designers break tasks into themed prompts (e.g. one for structure, one for style).
+## Required Inputs & Pre-Flight Checklist  
+Before running the skill, ensure you have:  
+- **Project Brief:** Audience, goals, brand voice, visual identity guidelines. *If missing:* Use industry defaults.  
+- **Scope of Work:** Key pages/features to research (e.g. homepage, checkout, profile).  
+- **Content & Assets:** Existing text, images, wireframes.  
+- **Tech Constraints:** Existing tech stack (React, mobile-first, etc.), performance targets.  
+- **Accessibility Targets:** Desired WCAG level or platform requirements.  
+- **Competitor List:** Top 3–5 direct and indirect competitors, plus any innovative peers. *If unspecified:* select ones in the same domain.  
+- **Success Metrics:** KPIs (conversion, engagement, NPS) to guide validation.  
 
-## Community Endorsement & Ranking  
-We assess prompt popularity via community metrics. Taskade’s prompt library boasts **1M+ users**【14†L83-L90】, making its navigation/footer prompts extremely widely endorsed. Among Figma community tools, the “figgpt” plugin has over **100k users**【23†L44-L48】, indicating high usage of its UI prompts. The DocsBot “Modern Website Header” prompt is from a platform with **75k+ users**【46†L94-L99】. For comparison, Figma’s “AI Designer” plugin has ~30k users【23†L44-L48】. GitHub resources see modest stars (e.g. the eonist gist had a few), and blog articles (Rocket, Base44) reach design audiences but have fewer direct metrics.  
+Confirm these inputs to avoid ambiguity. A clear brief enables targeted analysis and innovative solutions.
 
-By these measures, the most endorsed prompts come from Taskade and high-install Figma plugins. We use numeric metrics like user installs or “Loved by” counts where available. A bar chart below compares engagement (in thousands) for major prompt sources:  
+## Personas & Roles
 
-【Indicator Chart: Top sources by engagement】  
+| Role                    | Responsibilities                                  | Key Questions                          | Deliverables                         |
+|-------------------------|---------------------------------------------------|----------------------------------------|--------------------------------------|
+| **UX Researcher**       | Conducts user interviews, surveys, and persona/need analysis. Gathers market insights. | *Who are our users? What pain points are unaddressed by competitors?* | User personas, research summary, competitor feature matrix. |
+| **Product Manager**     | Defines business objectives, oversees roadmap, and success criteria. | *What are business goals and priority features? How do competitors position themselves?* | Research brief, prioritized requirements, hypothesis statements. |
+| **UX Designer**         | Maps user flows, creates wireframes, and structures information architecture. | *How should users navigate this interface? What flows do competitors use?* | Sitemap, wireframes, flow diagrams, UI pattern sketches. |
+| **UI Designer**         | Designs visual language and components. Creates style guides and mockups. | *What colors, typographic hierarchy, and visuals best convey the brand?* | Moodboards, style guide (colors/fonts), high-fidelity mockups. |
+| **Content Strategist**  | Plans content architecture, writes microcopy and contextual text. | *What messages and language tone resonate? How do competitors speak to users?* | Content outline, UX writing (headings, buttons), tone guidelines. |
+| **Accessibility Specialist** | Ensures inclusive design (WCAG compliance, UX guidelines). | *Are our designs accessible? What accessibility gaps exist in competitor UIs?* | Accessibility audit report, compliance checklist, remediation suggestions. |
+| **Front-End Developer** | Prototypes interactive UI, enforces performance optimization. | *How to technically realize the design? Can we improve on competitors’ implementation?* | HTML/CSS/JS prototype, component specs, performance benchmarks. |
 
-【54†embed_image】 *Figure: Engagement (approximate user count) of AI design prompt sources【14†L83-L90】【46†L94-L99】【23†L44-L48】.*  
+Each persona has a clear domain and output. Prompts should instruct them with role-specific tasks (see workflow). Collaboration among these roles ensures comprehensive research and design.
 
-## Common Prompt Patterns and Phrases  
-Analysis reveals recurring phrasing in effective prompts:  
-- **Imperative with goal and context:** Many start with a verb: “Create/Design/Generate a [style] [component]” or “Build a [type of site]…”. For example, “Create a clean website layout for a tech startup…”【36†L117-L120】 or “Design a clear and user-friendly navigation…”【42†L42-L49】.  
-- **Specified sections/components:** Designers enumerate key parts (e.g. “hero section, navigation bar, video section, social proof…”【36†L117-L120】; “feature list, video demo, social proof section, and pricing section”【36†L140-L144】). This breaks complexity into actionable elements.  
-- **Stylistic adjectives:** Common adjectives include *modern, clean, intuitive, user-friendly, responsive, mobile-friendly, accessible, minimalist, balanced.* E.g. “soft colors, balanced white space, clean layout”【36†L181-L185】 or “dark mode design, modern color palette”【36†L140-L144】.  
-- **Performance and UX cues:** Prompts often add “fast loading times”, “optimized images”, “smooth animation”, “responsive design”, emphasizing best practices【54†L83-L89】【46†L49-L58】. Phrases like “intuitive navigation” or “seamless checkout” reflect UX goals.  
-- **Output instructions:** Many prompts request specific output formats, e.g. “Generate HTML code and explain the structure”【36†L117-L120】 or “Provide a wireframe or visual representation”【42†L42-L49】. This guides AI to deliver structured results.  
+## Multi-Step Workflow
 
-These patterns (goal + list of elements + style cues) form templates designers reuse, often combining multiple best-practices in one prompt.
+1. **Discovery & Competitive Audit:**  
+   - *What to Ask:* “Review competitor [Name]’s interface for [feature/page]. Summarize their layout, components, and interactions.”  
+   - *Who:* **UX Researcher & Product Manager.** They identify user needs and competitor positioning.  
+   - *Output:* Competitor audit docs (screenshots + notes), comparison table of features.
 
-## Prompt Templates (Ready-to-Use, with Notes)  
-Below are 10 prompt templates. Each combines key components; use them as starting points and customize to your project context.
+2. **UI Pattern Extraction:**  
+   - *What to Ask:* “Extract common UI patterns from competitors (navigation, cards, modals) into a library.”  
+   - *Who:* **UX Designer & UI Designer.** Analyze patterns (colors, typography, grid) and UI kits.  
+   - *Output:* Pattern library table (pattern name, usage, notes), visual style references.
 
-1. **Multi-step, Multi-persona Site Design Prompt:**  
-   ```
-   You are **DesignAssistant**, a team of design experts (UX designer, UI designer, content strategist).  
-   - *Before starting*, clarify project goals: “What is the website’s purpose, target audience, and brand identity?” Resolve any ambiguities.  
-   1. *Persona (UX)*: Outline the website structure. List required pages or sections (homepage, features, about, etc.) and describe the user journey.  
-   2. *Persona (UI)*: Decide on visual style. Specify color palette, typography, and overall aesthetic (e.g. minimalist, playful, corporate). Suggest a mood or theme.  
-   3. *Persona (Content)*: Draft key microcopy. Write headings, labels, and call-to-action text for each section. Ensure tone is friendly and concise.  
-   4. *Persona (Developer)*: Recommend any technical considerations (responsive layout, accessibility).  
-   After these steps, **DesignAssistant**, generate the website design (wireframes or HTML/CSS) incorporating all above decisions.  
-   ```  
-   *When to use:* A thorough template for complex projects needing clear roles and stages. Best used interactively: first get answers for each persona, then finalize design. *Best practice:* Explicitly role-play each expert and iterate step-by-step before generating final design.*
+3. **Prompt Harvesting:**  
+   - *What to Ask:* “Collect example AI prompts from design communities for similar features (e.g. ‘login page design prompt’).”  
+   - *Who:* **UX Researcher & Content Strategist.** Search GitHub, Figma, forums.  
+   - *Output:* Catalog of relevant prompt templates, with source and engagement metrics.
 
-2. **Startup Website Layout Prompt:**  
-   > *“Create a clean website layout for a **tech startup**. Include a hero section, navigation bar, feature section, social proof (testimonials or logos), pricing plans, and a contact section. Use soft colors and ample white space to look modern. Ensure the layout is responsive. Generate HTML/CSS and explain each section’s purpose.”*  
-   *Use when:* You need a full-page layout for a startup or SaaS site. *Notes:* Naming your industry or product helps contextualize content. Asking for code + explanation encourages a structured response.
+4. **Ideation & Concepting:**  
+   - *What to Ask:* “Based on gaps in competitor UIs, propose novel features or layouts. Generate sketches or descriptions.”  
+   - *Who:* **UI/UX Designers & Product Manager.** Brainstorm improvements (unique interactions, microinteractions).  
+   - *Output:* Feature hypotheses, low-fi concept sketches or scenario descriptions.
 
-3. **Landing Page (Product) Prompt:**  
-   > *“Design a landing page for a **productivity app**. Include a hero banner with a prominent call-to-action, a list of key features, an embedded demo video, a social proof section (user quotes or logos), and a pricing table. Use a dark mode theme with a modern color accent. Provide the layout concept and HTML structure.”*  
-   *Use when:* Focus is on a conversion-oriented homepage. *Notes:* Mentioning the app type and style (dark mode) tailors the output. Ensure to specify the CTA (e.g. “Try Now”).
+5. **Prototyping Experiments:**  
+   - *What to Ask:* “Develop a prototype for the new concept (Figma/HTML) and define an A/B test with metrics.”  
+   - *Who:* **Front-End Dev & UI Designer.** Build interactive prototype, plan tests (e.g. color variants, layout changes).  
+   - *Output:* Interactive prototype or design spec, experiment plan (metrics, user segments).
 
-4. **Personal Blog Site Prompt:**  
-   > *“Generate a minimal personal blog website. Use a cream background with soft accent colors. Include a navigation bar, a homepage with a grid of blog post previews (title, snippet, date), and an author/about section. Ensure typography is clean and legible. Output a Figma design or HTML/CSS for the home page layout.”*  
-   *Use when:* You need a simple, elegant blog design. *Notes:* Highlight “minimal” and color preference. Asking for Figma output (if supported) can yield mockup images.
+6. **Validation & Metrics:**  
+   - *What to Ask:* “Analyze user feedback/data from prototypes or similar features. Refine design based on results.”  
+   - *Who:* **All Personas.** Collaborate to review usability tests or analytics.  
+   - *Output:* Insights report, revised requirements, success metrics (conversion increase, engagement lift).
 
-5. **Modern Marketing Site Prompt (Figma):**  
-   > *“Create a marketing website design using Figma for a new startup. Use a contemporary layout with balanced white space. Specify a soft color palette and modern sans-serif fonts. Include a large hero section, followed by a split feature grid (text and images), a testimonial slider, and a lead-capture form. Ensure consistency across sections.”*  
-   *Use when:* You want a polished mockup in Figma. *Notes:* Mentioning the tool and specific components (sliders, forms) guides the design detail. Reference a style (e.g. “contemporary”) for tone.
+7. **Handoff & Documentation:**  
+   - *What to Ask:* “Prepare final assets and documentation for development.”  
+   - *Who:* **Front-End Dev & Content Strategist.** Finalize code snippets, copy docs, and style specifications.  
+   - *Output:* Component library, styleguide, content repository, and guidelines for implementation.
 
-6. **Contact Page Functionality Prompt:**  
-   > *“Generate code for a contact page form with validation. Include input fields: Name, Email, Message, and a Submit button. Validate that name and email are not empty and email has proper format. Show user-friendly error messages. Provide HTML/CSS/JavaScript code example.”*  
-   *Use when:* You need working code for a contact form. *Notes:* Be specific about fields and validation rules. This prompt is more technical – useful for developers.
+8. **Iteration & Continuous Research:**  
+   - *What to Ask:* “Monitor user feedback and market trends. Iterate on features with new experiments.”  
+   - *Who:* **Product Manager & UX Researcher.** Keep an eye on shifts in competitor UI and user needs.  
+   - *Output:* Roadmap updates, next-phase research agenda.
 
-7. **Navigation Menu Design Prompt:**  
-   > *“Design a clear and responsive navigation menu for **[Your Website Name]**. Start by analyzing the site’s sections. Create a menu structure with logical labels and any dropdowns needed. Include elements like a search bar or breadcrumbs if relevant. Ensure the menu works on mobile (e.g. a hamburger toggle) and follows accessibility best practices (high-contrast text, keyboard focus states). Provide a wireframe sketch or description.”*  
-   *Use when:* Crafting or refining site navigation. *Notes:* Replace bracketed name. Emphasize responsiveness and accessibility to cover all devices.
+Follow these steps in sequence, addressing acceptance criteria (see best practices) at each stage. Use numbered prompts to guide the AI through this structured process.
 
-8. **Footer & Global Elements Prompt:**  
-   > *“Create a website footer design that includes: contact info, social media links, quick links to main pages, and a brief company blurb. Keep it visually simple but on-brand. Suggest how it remains consistent across pages and responsive on mobile. Provide the HTML structure and styling notes.”*  
-   *Use when:* Finalizing the site’s bottom section. *Notes:* Footers often repeat on all pages; mention consistency. “On-brand” ties it to existing color/text styles.
+## Best-Practice Rules & Checklists
 
-9. **Mobile-First E-commerce Prompt:**  
-   > *“Design a mobile-responsive homepage for an **e-commerce fashion store**. Prioritize fast-loading images and simple navigation (e.g. a sticky menu or icons). Include prominent promotional banners, category highlights, and a large “Shop Now” button in the hero. Ensure the checkout link is easily accessible. Use a clean, modern aesthetic that appeals to shoppers on smartphones.”*  
-   *Use when:* Building or auditing a shop’s home page. *Notes:* Calling out “mobile-responsive” and UX tasks (checkout, loading) ensures technical viability. 
+- **Progressive Disclosure:** Reveal functionality gradually to avoid overwhelming users【59†L52-L58】. *AC:* Present core tasks upfront, with secondary options hidden.  
+- **Color Theory:** Use harmonious palettes (e.g. analogous or complementary) aligned to brand mood【61†L312-L320】. *AC:* Color contrasts ≥4.5:1; follow 60-30-10 rule for balance.  
+- **Visual Hierarchy:** Emphasize important elements (size, weight, color). *AC:* Headlines > body text; primary actions standout.  
+- **Grid & Responsiveness:** Design with a flexible grid. *AC:* Layout adapts smoothly across breakpoints; no horizontal scrolling.  
+- **Typography:** Use legible font choices and scale. *AC:* Body font ≥16px, line height 1.4–1.6, headings clear.  
+- **Microcopy Tone:** Keep UI text concise and action-oriented. *AC:* CTAs with verbs (“Buy Now”), error messages helpful and friendly.  
+- **Microinteractions/Motion:** Animate to guide attention (not distract). *AC:* Animations <0.5s, contextually meaningful transitions.  
+- **Performance:** Optimize assets. *AC:* Images resized, lazy-loaded; page load <2s ideal.  
+- **Accessibility:** Follow WCAG and platform guidelines. *AC:* All images have alt text, keyboard nav works, semantic HTML used【59†L52-L58】.  
 
-10. **Accessibility Improvement Prompt:**  
-   > *“Review our website’s homepage and suggest accessibility improvements. Check color contrast for text, ensure all images have alt text, confirm keyboard navigation, and verify semantic HTML usage. List any issues and how to fix them (e.g. ARIA labels, larger text, simpler navigation).”*  
-   *Use when:* Conducting an accessibility audit. *Notes:* Though slightly different in tone (review rather than design), it embodies best practices (progressive enhancement). It can guide iterative fixes.
+Apply these rules as explicit checks. For example, require a color contrast report, run automated accessibility audits, and peer-review design hierarchy before finalizing.
 
-Each template above follows best practices (specifying context, sections, style, and outcome) and can be customized (e.g. replace “productivity app” with your product). Annotate them with project-specific details and expected outputs to get the best results.
+## Prompt Templates for UI Research
 
-## Source Comparison  
+- **Competitor Audit Prompt:** *When:* Starting analysis. *Prompt:* “Analyze [CompetitorName]’s [Feature/Page] interface. List key design elements, layout, and user flows. Provide screenshots or annotated descriptions.” *Output:* Competitor analysis doc.  
+- **UI Pattern Extraction Prompt:** *When:* Building pattern library. *Prompt:* “Browse popular UI libraries (Figma community, GitHub). Extract recurring patterns for [component] (e.g. navigation bars, cards) and note their usage.” *Output:* Pattern table (pattern, source, usage notes).  
+- **Community Prompt Harvesting:** *When:* Collecting inspiration. *Prompt:* “Find AI design prompts from top UX communities for [page type, e.g. login page]. List the prompt texts and their sources (with likes or forks counts).” *Output:* List of example prompts and engagement metrics.  
+- **Ideation Prompt:** *When:* Brainstorming new features. *Prompt:* “Using competitor gaps, propose three innovative UI features or flows for [project]. Describe how each would work and benefit users.” *Output:* Bullet-point feature ideas.  
+- **Prototype Generation Prompt:** *When:* Creating designs. *Prompt:* “Design a Figma prototype for [new feature]. Use [brand colors]. Include annotations for interactions (e.g. ‘on click…’).” *Output:* Figma design frames.  
+- **UX Research Prompt:** *When:* Gathering user sentiment. *Prompt:* “Analyze user reviews and social media for mentions of [domain]. What pain points or desires do users express about UI/UX?” *Output:* Summary of user feedback themes.  
+- **Competitive Prompt Engineering:** *When:* Defining AI queries. *Prompt:* “Craft an AI prompt that yields a dashboard design tailored to a [industry]. Include style and functionality requirements.” *Output:* Example prompt text for design generation.  
+- **Accessibility Audit Prompt:** *When:* Checking compliance. *Prompt:* “Review the current design against WCAG 2.1 AA. Identify any violations (e.g. color contrast, missing labels) and suggest fixes.” *Output:* Accessibility audit report.  
+- **Experiment Hypothesis Prompt:** *When:* Planning tests. *Prompt:* “We think adding feature X will improve [metric] by [percentage]. Design an A/B test to validate this hypothesis, specifying variants and KPIs.” *Output:* Experiment plan summary.  
+- **Innovation Trend Prompt:** *When:* Seeking new ideas. *Prompt:* “What emerging UI/UX trends or patterns are competitors adopting (e.g. neomorphism, glassmorphism)? How could we implement them uniquely?” *Output:* Trend analysis with implementation suggestions.
 
-| Source / Author           | Community / Platform         | Engagement (Metric)         | Date        | Relevance                            |
-|---------------------------|------------------------------|-----------------------------|-------------|--------------------------------------|
-| Taskade (AI Prompts Team) | Taskade AI Prompt Library    | “Loved by 1M+ users”【14†L83-L90】 | 2025 (approx) | Official prompt library (layout, components) |
-| docsbot.ai (UglyRobot)    | DocsBot Prompt Repository    | “Loved by 75k+ users”【46†L94-L99】 | 2024 | Curated AI prompts (header design)   |
-| Rocket (Rakesh Purohit)   | *Rocket Blog (UX/devel.)*    | Popular tech blog (metric n/a) | Mar 2026   | Practical prompt examples (full-site) |
-| Base44 (AI Builders)      | *Base44 blog*                |  Blog read by AI devs (n/a)  | Jan 2026    | AI prompt techniques (dashboard, page) |
-| Figma Community (figgpt)  | Figma Plugin “figgpt”        | 100k+ installs【23†L44-L48】  | 2023?       | UI text/UX plugin (phrase generators) |
-| DesignPrompts (M.kenneth) | designprompts.dev            | Community showcase (free resource) | 2023 (beta) | AI-generated style gallery (Claude prompts) |
-| eonist (GitHub Gist)      | GitHub (gist)                | 2 stars, 0 forks            | 2023        | Collection of design AI plugins/prompts |
-| CrazyEgg (blog)           | *CrazyEgg Blog*              | SEO/design blog (n/a)       | 2023        | Analysis of AI prompt strategies      |
+*(Use and customize these prompts to your research context and output needs.)*
 
-*Table: Selected prompt sources, their context, engagement, and focus.* Engagement is indicated where available (e.g. user/install counts)【14†L83-L90】【23†L44-L48】【46†L94-L99】. Taskade and Figma plugins have clear metrics; blogs and community projects are noted for reach and topic.
+## Output Examples  
+Specify one or more desired formats:  
+- **Competitor Audit Report:** Markdown/HTML file listing competitor screenshots, features, and analysis.  
+- **Pattern Library Table:** CSV/Markdown table of UI components with descriptions and usage contexts.  
+- **Design Brief:** PDF or doc summarizing research insights, personas, and design directions.  
+- **Annotated Wireframes:** Images or Figma frames with comments.  
+- **Prototype Files:** Figma links or code repositories for interactive prototypes.  
+- **Research Deck:** Slide deck of findings (could include charts, quotes).  
+
+Request the format explicitly (e.g. “Provide a Figma mockup”, “Output a Markdown report”).
+
+## Prompt Validation Metrics
+
+To evaluate prompts and ideas, track community engagement:  
+
+```
+Likes      : ********** (10)
+Stars      : ********** (10)
+Installs   : ********   (8)
+Comments   : ******     (6)
+Forks      : *****      (5)
+Shares     : ****       (4)
+```
+
+Monitor likes, shares, forks, etc. For example, Taskade UI prompts have **1M+ users**【14†L83-L90】, a figure prompt had **100k installs**【65†L45-L48】, and other top posts show high upvotes. Rank prompts by these metrics as proxies for quality. Also consider usage context and recency.
+
+## Synthesizing Competitor Insights  
+- **Gap Analysis:** Compare competitor strengths and weaknesses to user needs. Identify missing features (e.g. if competitors lack dark mode or speed optimizations).  
+- **Hypothesis Framing:** Turn insights into testable ideas: “If we add X (from gap), we expect Y (improved metric).”  
+- **Experimentation:** Prioritize experiments by impact vs effort. Define success metrics (engagement %, conversion lift). Plan A/B tests on key changes (color schemes, layout tweaks, microinteraction additions).  
+- **Innovation:** Encourage creative leaps by combining unrelated patterns or applying trends. For example, introduce a subtle motion feature inspired by social media feeds in a corporate dashboard for freshness.  
+- **Documentation:** Record insights in a research brief, and update it as experiments progress.
+
+## Troubleshooting & Tips  
+
+- **Data Overload:** If info is too vast, narrow the focus (e.g. audit one key competitor first).  
+- **Vague Results:** Refine questions or break them into smaller tasks.  
+- **Conflicting Findings:** Validate with user tests if competitors disagree.  
+- **Iteration:** Treat SKILL outputs as drafts; iterate using feedback loops.  
+
+FAQ: *What if a competitor has no obvious gaps?*  – Focus on differentiators (brand story, unique microcopy). *What if prompts yield repetitive ideas?* – Add randomness or inverse the problem to unlock creativity.
+
+## Changelog & Attribution  
+
+- **Sources:** Based on high-usage UX/UI communities and design libraries. Prioritized sources: *Taskade AI Prompts*, *Figma Community plugins/files*, *GitHub prompt repos*, and industry blogs/threads (e.g. Medium, Notion).  
+- **Inspiration:** Prompt templates and workflows drawn from our prior UX/UI prompt research【36†L117-L120】【42†L42-L49】 and competitive analysis practices.  
+- *Mar 2026:* Added competitor research and pattern-library steps, unique implementation guidelines.  
+- *Citations:* Where applicable, references (e.g. color theory【61†L312-L320】, progressive disclosure【59†L52-L58】) are embedded above.
 
 ```mermaid
 flowchart LR
-    A[Define project goals & audience] --> B[Specify design requirements & style]
-    B --> C[Compose detailed AI prompt (layout, components, style)]
-    C --> D[AI generates initial design (wireframe/mockup)]
-    D --> E[Review design for UI hierarchy, color, content, accessibility]
-    E --> F{Issue?} -->|Yes| G[Refine prompt or ask follow-up for improvements]
-    F -->|No| H[Finalize design assets and code]
+    A[Prepare brief & inputs] --> B[UX Researcher: run competitor audits]
+    B --> C[Pattern Library: extract common UI components]
+    C --> D[Prompt Collector: gather design prompts/examples]
+    D --> E[IDEATION: propose new features/patterns]
+    E --> F[Prototyping: design and code experiments]
+    F --> G[Validation: test & metric analysis]
+    G --> H{Iterate or Finalize}
+    H --> E
 ```  
-*Figure: Prompt-to-design workflow (mermaid flowchart). Start by clarifying goals, then specify requirements, generate design with AI, review it, and iterate until final design is ready.*
 
-**Sources:** We quoted and analyzed actual prompts from Taskade【42†L42-L49】【54†L81-L89】, blog posts【36†L117-L120】, and other design resources to ensure authenticity and practical relevance. All examples preserve original wording and citations for transparency. Each citation links to a connected source used in this analysis.
+```mermaid
+%% Bar chart of prompt validation metrics
+    graph LR
+    likes[L👍 Likes] ---|10| high[██████████]
+    stars[S⭐ Stars] ---|10| high
+    installs[I⬇️ Installs] ---|8| med[████████]
+    comments[C💬 Comments] ---|6| med
+    forks[F🔀 Forks] ---|5| low[█████]
+    shares[🔗 Shares] ---|4| low
+```  
+
+### Persona Comparison
+
+| Role                    | Responsibilities                               | Key Questions                 | Deliverables                    |
+|-------------------------|-----------------------------------------------|-------------------------------|---------------------------------|
+| UX Researcher           | User needs, persona, competitor studies        | *Who are users? What do competitors offer?* | Personas, competitor feature matrix, research brief |
+| Product Manager         | Business goals, priorities, metrics            | *What are objectives? How to win vs rivals?* | Project brief, hypotheses, KPI definitions |
+| UX Designer            | Flows, wireframes, IA                        | *What flows solve user goals?* | Sitemap, wireframes, flowcharts  |
+| UI Designer             | Visual design, style guide                    | *What visual language fits brand?* | Mockups, style guide (colors/fonts) |
+| Content Strategist      | Messaging, microcopy, information structure    | *What tone and content needed?* | Content outline, copy drafts      |
+| Accessibility Specialist| WCAG compliance, inclusive UI patterns        | *What A11y issues exist?* | Accessibility report, compliance checklist |
+| Front-End Developer     | Implementation, performance, interactivity     | *How to build this UI robustly?* | Prototype (code/components), performance report |
+
+All personas collaborate but focus on their domains, ensuring a holistic approach to UI research and innovation. 
+
