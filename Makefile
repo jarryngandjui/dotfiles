@@ -1,8 +1,8 @@
 # Dotfiles Setup Makefile
 # Idempotent setup for macOS terminal environment
 
-# Variables
-DOTFILES_DIR := $(shell pwd)
+# Variables (repo root = directory of this Makefile, not cwd — avoids wrong paths when make runs from a subdir)
+DOTFILES_DIR := $(patsubst %/,%,$(dir $(abspath $(firstword $(MAKEFILE_LIST)))))
 DOTFILES_CONFIG_DIR := $(DOTFILES_DIR)
 HOME_DIR := $(HOME)
 CONFIG_DIR := $(HOME_DIR)/.config
@@ -175,7 +175,8 @@ setup-claude:
 	if [ -e "$(HOME_DIR)/.claude" ] && [ ! -L "$(HOME_DIR)/.claude" ] && [ -d "$(HOME_DIR)/.claude" ]; then \
 		echo "$(YELLOW)Skipping: ~/.claude is a directory; rename or merge it before using the dotfiles symlink.$(NC)"; \
 	else \
-		ln -sf $(DOTFILES_CONFIG_DIR)/.claude $(HOME_DIR)/.claude; \
+		rm -f "$(HOME_DIR)/.claude"; \
+		ln -s "$(DOTFILES_CONFIG_DIR)/.claude" "$(HOME_DIR)/.claude"; \
 		echo "$(GREEN)~/.claude -> $(DOTFILES_CONFIG_DIR)/.claude$(NC)"; \
 	fi
 
