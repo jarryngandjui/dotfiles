@@ -1,0 +1,11 @@
+.desloppify/
+
+# Claude Code: ignore operational churn (sessions, cache, backups, history, etc.);
+# keep plugins, skills, projects, and versioned root config only.
+.claude/*
+!.claude/plugins/
+!.claude/plugins/**
+!.claude/skills/
+!.claude/skills/**
+!.claude/settings.json
+!.claude/.gitkeep
