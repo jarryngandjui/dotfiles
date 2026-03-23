@@ -80,6 +80,67 @@ At each numbered step, prompt the AI with the role-specific questions and tasks 
 
 Incorporate these checks as a final review checklist or automated linting step to ensure a professional outcome.
 
+## Design Trend Awareness 
+> These are trends to be *aware of*, not prescriptions. Evaluate each against your project's specific users and goals before implementing. A clear brand identity always outweighs chasing trends.
+
+The following signals reflect where the web design community is pushing in 2025, largely as a reaction to AI-generated aesthetics, mobile-first constraints, and hyper-UX orthodoxy:
+
+**1. Intentional Imperfections**
+Hand-drawn elements, rough layouts, messy textures — deliberately human to counter AI's "too perfect" output. Best for creative agencies, indie brands, and portfolios wanting an authentic feel.
+- [madeinhaus.com](https://madeinhaus.com/)
+- [ilyaskin.xyz](https://ilyaskin.xyz/)
+
+**2. Micro-Interactions**
+Subtle feedback on hover/scroll (slight tilt, border color shift) rather than large choreographed animations. Broadly applicable — small signals that reward attention without overwhelming.
+- [hiro.so](https://www.hiro.so/)
+- [gentlerain.ai](https://www.gentlerain.ai/)
+
+**3. Bright & Bold**
+Oversized headers, high-saturation colors (lime is trending), heavy font weights filling the viewport. Works well for brand-forward landing pages, product launches, and youth-oriented products.
+- [joinflowparty.com](https://www.joinflowparty.com/)
+- [weareordinaryfolks.com](https://www.weareordinaryfolks.com/)
+
+**4. Text-Heavy Layouts**
+Intentional "walls of text" as a pattern interrupt — effective when used deliberately with larger font sizes. Strong fit for editorial sites, manifestos, and brands with a distinctive written voice.
+- [folio.showit.site](https://folio.showit.site/)
+- [artmilitonian.com](https://artmilitonian.com/)
+- [nr.world](https://nr.world/)
+
+**5. Custom Cursors**
+Replacing the default pointer with a shape, orb, or branded element. Best used sparingly for portfolios, luxury brands, or experimental/art-direction sites.
+- [studioclim.com](https://studioclim.com/)
+- [rekorderstudios.com](https://www.rekorderstudios.com/)
+
+**6. Sound Design**
+Opt-in ambient audio or interactive sound effects tied to UI events. Suited to immersive experiences, games, and storytelling sites — never autoplay without user consent.
+- [motionsickness.co.nz](https://motionsickness.co.nz/)
+- [bfcm.stripe.com](https://bfcm.stripe.com/)
+
+**7. Scrollytelling**
+Scroll-triggered narrative experiences where content, animations, and layout evolve as the user moves down (or sideways). Great for long-form articles, product explainers, and campaign microsites.
+- [mew.xyz](https://mew.xyz/)
+- [pinterest.com/pinterest-predicts](https://www.pinterest.com/pinterest-predicts)
+
+**8. Multi-Directional Navigation**
+Horizontal scrolling sections, room-based navigation, breaking the purely vertical scroll paradigm. Suited to immersive experiences, portfolios, and product showcases.
+- [agorespace.com](https://www.agorespace.com/en-us/)
+- [cartier.com/watches](https://www.cartier.com/en-us/watches)
+
+**9. Anti-Usability**
+Intentionally unconventional layouts and non-standard navigation — treating users as curious rather than confused. Use with extreme caution; best reserved for experimental/art projects and culture brands.
+- [wildeweide.nl](https://wildeweide.nl/en/)
+- [newyorksunshine.com](https://newyorksunshine.com/)
+
+### How to Apply Trend Awareness
+
+1. **Start with goals, not trends.** Ask: "If a visitor does only one thing on this site, what should it be?" Only adopt a trend if it serves that outcome.
+2. **Use trends as a pattern interrupt.** Trends create contrast — e.g., a text-heavy section stands out precisely *because* most sites avoid it.
+3. **Micro-interactions are almost universally safe.** They improve engagement without disrupting usability — always worth considering.
+4. **Sound and anti-usability carry the highest risk.** Validate these with user testing before shipping.
+5. **Imperfections and bold typography signal authenticity.** Especially effective for brands competing with AI-generated content.
+
+*Source: [Stand Out with the Top 10 Web Design Trends of 2025](https://showit.com/website-tips/stand-out-with-the-top-10-web-design-trends-of-2025/) — Chris Misterek, Showit (Dec 2024)*
+
 ## Prompt Templates
 
 - **Startup Layout (full page):** *When:* Building a SaaS or startup site. *Prompt:* “Create a modern website for a tech startup: hero banner, feature sections, testimonials, pricing, and contact form. Use a clean layout with plenty of white space. Provide HTML/CSS and explain each section.” *Output:* Full-page layout with code【36†L117-L120】.
@@ -136,7 +197,8 @@ Iterate by treating each persona’s output as a checkpoint, revisiting any earl
 ## Changelog & Attribution  
 
 - **Sources:** Based on high-engagement prompt libraries and guides. Prioritize *Taskade* and *Figma Community* (plugins, files), *GitHub repos*, *Medium/Notion articles*, and active *social threads*. Use official or community-verified examples when citing prompt language.  
-- *Mar 2026:* Initial Skill creation with multi-persona workflow (inspired by Claude SKILL formats) and prompt templates from Taskade and design blogs.  
+- *Mar 2026:* Initial Skill creation with multi-persona workflow (inspired by Claude SKILL formats) and prompt templates from Taskade and design blogs.
+- *Mar 2026:* Added Design Trend Awareness section covering 9 key 2025 web design trends (imperfections, micro-interactions, bold typography, scrollytelling, etc.) with guidance on when to apply them.  
 - *Sources include:* AI prompt repositories (Taskade AI Prompts, DocsBot) and UX design blogs, as well as Figma plugin usage stats【14†L83-L90】【65†L45-L48】.
 
 ```mermaid
