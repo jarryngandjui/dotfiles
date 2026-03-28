@@ -30,6 +30,7 @@ help:
 	@echo "  tmux     - Setup Tmux and TPM"
 	@echo "  starship - Setup Starship prompt"
 	@echo "  claude   - Symlink ~/.claude from dotfiles"
+	@echo "  cursor-cli - Install Cursor CLI (Homebrew cask only)"
 	@echo "  clean    - Remove symlinks and configurations"
 	@echo "  clean-backups - Remove old zshrc backup files"
 	@echo "  verify-zsh-completions - Test if compdef is working"
@@ -63,6 +64,11 @@ install-brew-package:
 		fi; \
 	fi
 
+# Cursor CLI (Homebrew cask; binary is typically cursor-agent)
+.PHONY: cursor-cli
+cursor-cli: check-homebrew
+	@$(MAKE) install-brew-package PACKAGE=cursor-cli TYPE=cask
+
 # Homebrew setup
 .PHONY: homebrew
 homebrew: check-homebrew install-brew-packages
@@ -89,6 +95,7 @@ install-brew-packages: check-homebrew
 	@$(MAKE) install-brew-package PACKAGE=raycast TYPE=cask
 	@$(MAKE) install-brew-package PACKAGE=betterdisplay TYPE=cask
 	@$(MAKE) install-brew-package PACKAGE=claude-code TYPE=cask
+	@$(MAKE) install-brew-package PACKAGE=cursor-cli TYPE=cask
 	@$(MAKE) install-brew-package PACKAGE=llvm TYPE=formula
 	@$(MAKE) install-brew-package PACKAGE=zsh TYPE=formula
 	@$(MAKE) install-brew-package PACKAGE=starship TYPE=formula
@@ -99,6 +106,7 @@ install-brew-packages: check-homebrew
 	@brew tap hashicorp/tap 2>/dev/null || true
 	@$(MAKE) install-brew-package PACKAGE=hashicorp/tap/terraform TYPE=formula
 	@brew install awscli 2>/dev/null || echo "$(GREEN)awscli already installed$(NC)"
+	@$(MAKE) install-brew-package PACKAGE=pantsbuild/tap/pants TYPE=formula
 	@$(MAKE) setup-node
 
 # Node.js setup
@@ -305,5 +313,7 @@ status:
 	echo "Tmux: $$([ "$(call check-command,tmux)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Alacritty: $$([ "$(call check-brew-cask,alacritty)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Claude Code: $$([ "$(call check-brew-cask,claude-code)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Cursor CLI cask: $$([ "$(call check-brew-cask,cursor-cli)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
+	echo "Cursor CLI (cursor-agent|agent): $$([ "$(call check-command,cursor-agent)" = "yes" ] || [ "$(call check-command,agent)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "~/.claude symlink: $$([ -L "$(HOME_DIR)/.claude" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"; \
 	echo "Starship: $$([ "$(call check-command,starship)" = "yes" ] && echo "$(GREEN)✓$(NC)" || echo "$(RED)✗$(NC)")"
